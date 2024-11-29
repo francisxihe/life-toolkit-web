@@ -1,5 +1,6 @@
 import auth, { AuthParams } from '@/utils/authentication';
 import { useEffect, useMemo, useState } from 'react';
+import { todoRoutes } from '@/routes/todo.routes';
 
 export type IRoute = AuthParams & {
   name: string;
@@ -9,9 +10,14 @@ export type IRoute = AuthParams & {
   children?: IRoute[];
   // 当前路由是否渲染菜单项，为 true 的话不会在菜单中显示，但可通过路由地址访问。
   ignore?: boolean;
+  /** 是否用于包裹子组件 */
+  isWrapper?: boolean;
+  /** 是否为页面组件 */
+  isPage?: boolean;
 };
 
 export const routes: IRoute[] = [
+  todoRoutes,
   {
     name: 'menu.dashboard',
     key: 'dashboard',

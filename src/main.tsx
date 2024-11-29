@@ -6,17 +6,15 @@ import { Provider } from 'react-redux';
 import { ConfigProvider } from '@arco-design/web-react';
 import zhCN from '@arco-design/web-react/es/locale/zh-CN';
 import enUS from '@arco-design/web-react/es/locale/en-US';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import axios from 'axios';
 import rootReducer from './store';
-import PageLayout from './layout';
 import { GlobalContext } from './context';
-import Login from './pages/login';
 import checkLogin from './utils/checkLogin';
 import changeTheme from './utils/changeTheme';
 import useStorage from './utils/useStorage';
 import './mock';
-
+import Router from './Router';
 const store = createStore(rootReducer);
 
 function Index() {
@@ -84,10 +82,7 @@ function Index() {
       >
         <Provider store={store}>
           <GlobalContext.Provider value={contextValue}>
-            <Switch>
-              <Route path="/login" component={Login} />
-              <Route path="/" component={PageLayout} />
-            </Switch>
+            <Router />
           </GlobalContext.Provider>
         </Provider>
       </ConfigProvider>

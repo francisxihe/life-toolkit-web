@@ -30,9 +30,7 @@ function LoadingComponent(props: {
 
 export default (loader) =>
   load(loader, {
-    fallback: LoadingComponent({
-      pastDelay: true,
-      error: false,
-      timedOut: false,
-    }),
+    fallback: (
+      <LoadingComponent pastDelay={true} error={false} timedOut={false} />
+    ),
   });

@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { Switch, Route, Redirect, useHistory } from 'react-router-dom';
+import { Route, useLocation, useNavigate, Outlet } from 'react-router-dom';
 import { Layout, Menu, Breadcrumb, Spin } from '@arco-design/web-react';
 import cs from 'classnames';
 import {
@@ -56,37 +56,65 @@ function getIconFromKey(key) {
   }
 }
 
-function getFlattenRoutes(routes) {
+export interface FlattenRoute extends IRoute {
+  component?: any;
+  routePath?: FlattenRoute[];
+}
+
+function getFlattenRoutes(routes: IRoute[]) {
   const mod = import.meta.glob('./pages/**/[a-z[]*.tsx');
   const res = [];
-  function travel(_routes) {
+  function travel(_routes: IRoute[], routePath: FlattenRoute[]) {
     _routes.forEach((route) => {
-      const visibleChildren = (route.children || []).filter(
-        (child) => !child.ignore
-      );
-      if (route.key && (!route.children || !visibleChildren.length)) {
-        try {
-          route.component = lazyload(mod[`./pages/${route.key}/index.tsx`]);
-          res.push(route);
-        } catch (e) {
-          console.log(route.key);
-          console.error(e);
+      const flattenRoute: FlattenRoute = { ...route };
+
+      try {
+        if (route.key && route.isPage !== false) {
+          if (mod[`./pages/${route.key}/index.tsx`]) {
+            flattenRoute.component = lazyload(
+              mod[`./pages/${route.key}/index.tsx`]
+            );
+          } else {
+            flattenRoute.component = lazyload(mod[`./pages/${route.key}.tsx`]);
+          }
+          flattenRoute.routePath = [...routePath, flattenRoute];
+          res.push(flattenRoute);
         }
+      } catch (e) {
+        console.log(route.key);
+        // console.error(e);
       }
 
       if (isArray(route.children) && route.children.length) {
-        travel(route.children);
+        travel(
+          route.children,
+          flattenRoute.component ? [...routePath, flattenRoute] : routePath
+        );
       }
     });
   }
-  travel(routes);
+
+  travel(routes, []);
   return res;
+}
+
+export function useRouter() {
+  const { userInfo } = useSelector((state: GlobalState) => state);
+
+  const [routes, defaultRoute] = useRoute(userInfo?.permissions);
+
+  const flattenRoutes = useMemo(() => getFlattenRoutes(routes) || [], [routes]);
+
+  console.log('flattenRoutes', flattenRoutes);
+
+  return { flattenRoutes };
 }
 
 function PageLayout() {
   const urlParams = getUrlParams();
-  const history = useHistory();
-  const pathname = history.location.pathname;
+  const location = useLocation();
+  const navigate = useNavigate();
+  const pathname = location.pathname;
   const currentComponent = qs.parseUrl(pathname).url.slice(1);
   const locale = useLocale();
   const { settings, userLoading, userInfo } = useSelector(
@@ -118,13 +146,15 @@ function PageLayout() {
 
   const flattenRoutes = useMemo(() => getFlattenRoutes(routes) || [], [routes]);
 
+  console.log('flattenRoutes', flattenRoutes);
+
   function onClickMenuItem(key) {
     const currentRoute = flattenRoutes.find((r) => r.key === key);
     const component = currentRoute.component;
     const preload = component.preload();
     NProgress.start();
     preload.then(() => {
-      history.push(currentRoute.path ? currentRoute.path : `/${key}`);
+      navigate(currentRoute.path ? currentRoute.path : `/${key}`);
       NProgress.done();
     });
   }
@@ -265,24 +295,7 @@ function PageLayout() {
                 </div>
               )}
               <Content>
-                <Switch>
-                  {flattenRoutes.map((route, index) => {
-                    return (
-                      <Route
-                        key={index}
-                        path={`/${route.key}`}
-                        component={route.component}
-                      />
-                    );
-                  })}
-                  <Route exact path="/">
-                    <Redirect to={`/${defaultRoute}`} />
-                  </Route>
-                  <Route
-                    path="*"
-                    component={lazyload(() => import('./pages/exception/403'))}
-                  />
-                </Switch>
+                <Outlet />
               </Content>
             </div>
             {showFooter && <Footer />}
