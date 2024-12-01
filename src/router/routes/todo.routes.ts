@@ -1,9 +1,8 @@
-import { IRoute } from '@/routes/index';
+import { IRoute } from '@/router/routes';
 
 export const todoRoutes: IRoute = {
   name: 'menu.todo',
   key: 'todo',
-  isWrapper: true,
   children: [
     {
       name: 'menu.todo.page',

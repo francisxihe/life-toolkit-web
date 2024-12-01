@@ -22,7 +22,7 @@ function LoadingComponent(props: {
     return null;
   }
   return (
-    <div className={styles.spin}>
+    <div className="spin">
       <Spin />
     </div>
   );

@@ -1,11 +1,12 @@
 import { Routes, Route } from 'react-router-dom';
-import { useRouter } from './layout';
-import Login from './pages/login';
-import PageLayout, { FlattenRoute } from './layout';
-import lazyload from './utils/lazyload';
+import Login from '../pages/login';
+import PageLayout, { FlattenRoute } from '../components/Layout/layout';
+import lazyload from '../utils/lazyload';
+import useRouter from './useRouter';
+import { RouterContext } from './useRouter';
 
 function Router() {
-  const { flattenRoutes } = useRouter();
+  const router = useRouter();
 
   function renderRouteComponent(routes: FlattenRoute[]) {
     return routes.map((route) => {
@@ -24,11 +25,12 @@ function Router() {
   }
 
   return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/" element={<PageLayout />}>
-        {renderRouteComponent(flattenRoutes)}
-        {/* {flattenRoutes.map((route) => {
+    <RouterContext.Provider value={{ router }}>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<PageLayout />}>
+          {renderRouteComponent(router.flattenRoutes)}
+          {/* {flattenRoutes.map((route) => {
           return (
             <Route
               key={route.key}
@@ -49,16 +51,17 @@ function Router() {
             </Route>
           );
         })} */}
-        {/* <Route
+          {/* <Route
           path="/"
           // element={<Navigate to={`/${defaultRoute}`} />}
         /> */}
-        <Route
-          path="*"
-          element={lazyload(() => import('./pages/exception/403'))}
-        />
-      </Route>
-    </Routes>
+          <Route
+            path="*"
+            element={lazyload(() => import('../pages/exception/403'))}
+          />
+        </Route>
+      </Routes>
+    </RouterContext.Provider>
   );
 }
 

@@ -35,7 +35,7 @@ import Settings from '../Settings';
 import styles from './style/index.module.less';
 import defaultLocale from '@/locale';
 import useStorage from '@/utils/useStorage';
-import { generatePermission } from '@/routes';
+import { generatePermission } from '@/router/routes';
 
 function Navbar({ show }: { show: boolean }) {
   const t = useLocale();

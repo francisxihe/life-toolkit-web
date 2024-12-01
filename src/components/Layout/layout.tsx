@@ -1,5 +1,5 @@
-import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { Route, useLocation, useNavigate, Outlet } from 'react-router-dom';
+import React, { useState, useRef, useEffect, useContext } from 'react';
+import { useLocation, Outlet } from 'react-router-dom';
 import { Layout, Menu, Breadcrumb, Spin } from '@arco-design/web-react';
 import cs from 'classnames';
 import {
@@ -16,17 +16,13 @@ import {
 } from '@arco-design/web-react/icon';
 import { useSelector } from 'react-redux';
 import qs from 'query-string';
-import NProgress from 'nprogress';
-import Navbar from './components/NavBar';
-import Footer from './components/Footer';
-import useRoute, { IRoute } from '@/routes';
-import { isArray } from './utils/is';
-import useLocale from './utils/useLocale';
-import getUrlParams from './utils/getUrlParams';
-import lazyload from './utils/lazyload';
-import { GlobalState } from './store';
-import styles from './style/layout.module.less';
-
+import Navbar from '../NavBar';
+import Footer from '../Footer';
+import useRoute, { IRoute } from '@/router/routes';
+import useLocale from '../../utils/useLocale';
+import getUrlParams from '../../utils/getUrlParams';
+import { GlobalState } from '../../store';
+import styles from './layout.module.less';
 const MenuItem = Menu.Item;
 const SubMenu = Menu.SubMenu;
 
@@ -56,64 +52,16 @@ function getIconFromKey(key) {
   }
 }
 
+import { RouterContext } from '@/router/useRouter';
 export interface FlattenRoute extends IRoute {
   component?: any;
   routePath?: FlattenRoute[];
 }
 
-function getFlattenRoutes(routes: IRoute[]) {
-  const mod = import.meta.glob('./pages/**/[a-z[]*.tsx');
-  const res = [];
-  function travel(_routes: IRoute[], routePath: FlattenRoute[]) {
-    _routes.forEach((route) => {
-      const flattenRoute: FlattenRoute = { ...route };
-
-      try {
-        if (route.key && route.isPage !== false) {
-          if (mod[`./pages/${route.key}/index.tsx`]) {
-            flattenRoute.component = lazyload(
-              mod[`./pages/${route.key}/index.tsx`]
-            );
-          } else {
-            flattenRoute.component = lazyload(mod[`./pages/${route.key}.tsx`]);
-          }
-          flattenRoute.routePath = [...routePath, flattenRoute];
-          res.push(flattenRoute);
-        }
-      } catch (e) {
-        console.log(route.key);
-        // console.error(e);
-      }
-
-      if (isArray(route.children) && route.children.length) {
-        travel(
-          route.children,
-          flattenRoute.component ? [...routePath, flattenRoute] : routePath
-        );
-      }
-    });
-  }
-
-  travel(routes, []);
-  return res;
-}
-
-export function useRouter() {
-  const { userInfo } = useSelector((state: GlobalState) => state);
-
-  const [routes, defaultRoute] = useRoute(userInfo?.permissions);
-
-  const flattenRoutes = useMemo(() => getFlattenRoutes(routes) || [], [routes]);
-
-  console.log('flattenRoutes', flattenRoutes);
-
-  return { flattenRoutes };
-}
-
 function PageLayout() {
+  const { router } = useContext(RouterContext);
   const urlParams = getUrlParams();
   const location = useLocation();
-  const navigate = useNavigate();
   const pathname = location.pathname;
   const currentComponent = qs.parseUrl(pathname).url.slice(1);
   const locale = useLocale();
@@ -143,21 +91,6 @@ function PageLayout() {
   const showNavbar = settings.navbar && urlParams.navbar !== false;
   const showMenu = settings.menu && urlParams.menu !== false;
   const showFooter = settings.footer && urlParams.footer !== false;
-
-  const flattenRoutes = useMemo(() => getFlattenRoutes(routes) || [], [routes]);
-
-  console.log('flattenRoutes', flattenRoutes);
-
-  function onClickMenuItem(key) {
-    const currentRoute = flattenRoutes.find((r) => r.key === key);
-    const component = currentRoute.component;
-    const preload = component.preload();
-    NProgress.start();
-    preload.then(() => {
-      navigate(currentRoute.path ? currentRoute.path : `/${key}`);
-      NProgress.done();
-    });
-  }
 
   function toggleCollapse() {
     setCollapsed((collapsed) => !collapsed);
@@ -266,7 +199,9 @@ function PageLayout() {
               <div className={styles['menu-wrapper']}>
                 <Menu
                   collapse={collapsed}
-                  onClickMenuItem={onClickMenuItem}
+                  onClickMenuItem={(key) => {
+                    router.to(key);
+                  }}
                   selectedKeys={selectedKeys}
                   openKeys={openKeys}
                   onClickSubMenu={(_, openKeys) => {
