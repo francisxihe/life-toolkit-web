@@ -5,6 +5,7 @@ import { todoRoutes } from '@/router/routes/todo.routes';
 export type IRoute = AuthParams & {
   name: string;
   key: string;
+  fullPath?: string;
   children?: IRoute[];
   // 当前页是否展示面包屑
   breadcrumb?: boolean;

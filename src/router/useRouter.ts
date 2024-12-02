@@ -1,5 +1,4 @@
 import { IRoute } from '@/router/routes';
-import { FlattenRoute } from '@/layout';
 import lazyload from '@/utils/lazyload';
 import { isArray } from 'lodash';
 import { useSelector } from 'react-redux';
@@ -10,7 +9,12 @@ import NProgress from 'nprogress';
 import { useNavigate } from 'react-router-dom';
 import { createContext } from 'react';
 import { getComponentModule } from './helpers';
+
 export const RouterContext = createContext(null);
+
+export interface FlattenRoute extends IRoute {
+  component?: any;
+}
 
 export default function useRouter() {
   const navigate = useNavigate();
@@ -40,30 +44,38 @@ export default function useRouter() {
 
 export function getFlattenRoutes(routes: IRoute[]) {
   const res = [];
-  function travel(_routes: IRoute[], routePath: FlattenRoute[]) {
-    _routes.forEach((route) => {
+  function travel(_routes: IRoute[], parentPath?: string) {
+    return _routes.map((route) => {
       const flattenRoute: FlattenRoute = { ...route };
 
       try {
-        if (route.key && !route.onlyMenu) {
-          flattenRoute.component = lazyload(getComponentModule(route.key));
-          flattenRoute.routePath = [...routePath, flattenRoute];
+        flattenRoute.fullPath = undefined;
+        if (flattenRoute.key && !flattenRoute.onlyMenu) {
+          if (/^\//.test(flattenRoute.key)) {
+            flattenRoute.fullPath = flattenRoute.key;
+          } else if (parentPath) {
+            flattenRoute.fullPath = `${parentPath}/${flattenRoute.key}`;
+          }
+        }
+        if (flattenRoute.fullPath) {
+          flattenRoute.component = lazyload(
+            getComponentModule(flattenRoute.fullPath)
+          );
           res.push(flattenRoute);
         }
       } catch (e) {
-        console.log(route.key);
+        console.log(flattenRoute.key);
         // console.error(e);
       }
+      console.log(flattenRoute.component);
 
-      if (isArray(route.children) && route.children.length) {
-        travel(
-          route.children,
-          flattenRoute.component ? [...routePath, flattenRoute] : routePath
-        );
+      if (isArray(flattenRoute.children) && flattenRoute.children.length) {
+        flattenRoute.children = travel(flattenRoute.children, flattenRoute.key);
       }
+      return flattenRoute;
     });
   }
 
-  travel(routes, []);
+  travel(routes, '');
   return res;
 }

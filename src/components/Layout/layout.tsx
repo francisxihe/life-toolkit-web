@@ -53,10 +53,6 @@ function getIconFromKey(key) {
 }
 
 import { RouterContext } from '@/router/useRouter';
-export interface FlattenRoute extends IRoute {
-  component?: any;
-  routePath?: FlattenRoute[];
-}
 
 function PageLayout() {
   const { router } = useContext(RouterContext);

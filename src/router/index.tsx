@@ -1,23 +1,24 @@
 import { Routes, Route } from 'react-router-dom';
 import Login from '../pages/login';
-import PageLayout, { FlattenRoute } from '../components/Layout/layout';
+import PageLayout from '../components/Layout/layout';
 import lazyload from '../utils/lazyload';
-import useRouter from './useRouter';
-import { RouterContext } from './useRouter';
+import useRouter, { FlattenRoute, RouterContext } from './useRouter';
 
 function Router() {
   const router = useRouter();
 
   function renderRouteComponent(routes: FlattenRoute[]) {
+    console.log('routes', routes);
+
     return routes.map((route) => {
       return (
         route.component && (
           <Route
-            key={route.key}
-            path={`/${route.key}`}
+            key={route.fullPath}
+            path={`${route.key}`}
             element={<route.component />}
           >
-            {/* {renderRouteComponent(route.children)} */}
+            {route.children && renderRouteComponent(route.children)}
           </Route>
         )
       );
@@ -29,7 +30,9 @@ function Router() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<PageLayout />}>
-          {renderRouteComponent(router.flattenRoutes)}
+          {renderRouteComponent(
+            router.flattenRoutes.filter((r) => /^\//.test(r.key) && r.fullPath)
+          )}
           {/* {flattenRoutes.map((route) => {
           return (
             <Route
