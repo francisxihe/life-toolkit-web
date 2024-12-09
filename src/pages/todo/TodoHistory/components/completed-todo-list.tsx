@@ -2,8 +2,8 @@
 
 import { format } from 'date-fns';
 import { Card, Tag, Empty } from '@arco-design/web-react';
-import { Todo } from '../types';
-import { getPriorityQuadrant } from '../constants';
+import { Todo } from '../../types';
+import { getPriorityQuadrant } from '../../constants';
 
 interface CompletedTodoListProps {
   todos: Todo[];

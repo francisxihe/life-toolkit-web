@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import { format, isWithinInterval } from 'date-fns';
 import { Card, Grid, Typography, Statistic } from '@arco-design/web-react';
 import { useTodoContext } from '../context/todo-context';
-import { CompletedTodoList } from '../components/completed-todo-list';
+import { CompletedTodoList } from './components/completed-todo-list';
 import {
   HistoryFilters,
   type HistoryFilters as HistoryFiltersType,

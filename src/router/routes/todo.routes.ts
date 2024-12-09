@@ -5,12 +5,12 @@ export const todoRoutes: IRoute = {
   key: '/todo',
   children: [
     {
-      name: 'menu.todo.page',
-      key: 'page',
+      name: 'menu.todo.list',
+      key: 'TodoList',
     },
     {
       name: 'menu.todo.history',
-      key: 'history/page',
+      key: 'TodoHistory',
     },
   ],
 };
