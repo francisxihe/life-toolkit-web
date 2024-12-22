@@ -23,27 +23,32 @@ export default function useRouter() {
 
   const [routes, defaultRoute] = useRoute(userInfo?.permissions);
 
-  const flattenRoutes = useMemo(() => getFlattenRoutes(routes) || [], [routes]);
+  const { flattenRoutes, fullPathRoutes } = useMemo(
+    () => getFlattenRoutes(routes),
+    [routes]
+  );
 
   function routerTo(key) {
-    const currentRoute = flattenRoutes.find((r) => r.key === key);
+    const currentRoute = flattenRoutes.find((r) => r.fullPath === key);
     const component = currentRoute.component;
     const preload = component.preload();
     NProgress.start();
     preload.then(() => {
-      navigate(currentRoute.path ? currentRoute.path : `/${key}`);
+      console.log('currentRoute', currentRoute);
+      navigate(currentRoute.fullPath ? currentRoute.fullPath : `/${key}`);
       NProgress.done();
     });
   }
 
   return {
-    flattenRoutes: getFlattenRoutes(routes),
+    fullPathRoutes,
     to: routerTo,
+    defaultRoute,
   };
 }
 
 export function getFlattenRoutes(routes: IRoute[]) {
-  const res = [];
+  const flattenRoutes = [];
   function travel(_routes: IRoute[], parentPath?: string) {
     return _routes.map((route) => {
       const flattenRoute: FlattenRoute = { ...route };
@@ -61,21 +66,24 @@ export function getFlattenRoutes(routes: IRoute[]) {
           flattenRoute.component = lazyload(
             getComponentModule(flattenRoute.fullPath)
           );
-          res.push(flattenRoute);
         }
       } catch (e) {
-        console.log(flattenRoute.key);
+        // console.log(flattenRoute.key);
         // console.error(e);
       }
-      console.log(flattenRoute.component);
 
       if (isArray(flattenRoute.children) && flattenRoute.children.length) {
         flattenRoute.children = travel(flattenRoute.children, flattenRoute.key);
       }
+      flattenRoutes.push(flattenRoute);
       return flattenRoute;
     });
   }
 
-  travel(routes, '');
-  return res;
+  const fullPathRoutes = travel(routes, '');
+
+  return {
+    flattenRoutes,
+    fullPathRoutes,
+  };
 }

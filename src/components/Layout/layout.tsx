@@ -19,6 +19,7 @@ import qs from 'query-string';
 import Navbar from '../NavBar';
 import Footer from '../Footer';
 import useRoute, { IRoute } from '@/router/routes';
+import useRouter from '@/router/useRouter';
 import useLocale from '../../utils/useLocale';
 import getUrlParams from '../../utils/getUrlParams';
 import { GlobalState } from '../../store';
@@ -55,17 +56,18 @@ function getIconFromKey(key) {
 import { RouterContext } from '@/router/useRouter';
 
 function PageLayout() {
-  const { router } = useContext(RouterContext);
+  useContext(RouterContext);
   const urlParams = getUrlParams();
   const location = useLocation();
   const pathname = location.pathname;
   const currentComponent = qs.parseUrl(pathname).url.slice(1);
   const locale = useLocale();
-  const { settings, userLoading, userInfo } = useSelector(
-    (state: GlobalState) => state
-  );
+  const { settings, userLoading } = useSelector((state: GlobalState) => state);
 
-  const [routes, defaultRoute] = useRoute(userInfo?.permissions);
+  const { fullPathRoutes, to, defaultRoute } = useRouter();
+
+  console.log('defaultRoute', currentComponent, defaultRoute);
+
   const defaultSelectedKeys = [currentComponent || defaultRoute];
   const paths = (currentComponent || defaultRoute).split('/');
   const defaultOpenKeys = paths.slice(0, paths.length - 1);
@@ -101,7 +103,7 @@ function PageLayout() {
     return function travel(_routes: IRoute[], level, parentNode = []) {
       return _routes.map((route) => {
         const { breadcrumb = true, ignore } = route;
-        const iconDom = getIconFromKey(route.key);
+        const iconDom = getIconFromKey(route.fullPath);
         const titleDom = (
           <>
             {iconDom} {locale[route.name] || route.name}
@@ -109,7 +111,7 @@ function PageLayout() {
         );
 
         routeMap.current.set(
-          `/${route.key}`,
+          `/${route.fullPath}`,
           breadcrumb ? [...parentNode, route.name] : []
         );
 
@@ -117,7 +119,7 @@ function PageLayout() {
           const { ignore, breadcrumb = true } = child;
           if (ignore || route.ignore) {
             routeMap.current.set(
-              `/${child.key}`,
+              `/${child.fullPath}`,
               breadcrumb ? [...parentNode, route.name, child.name] : []
             );
           }
@@ -129,15 +131,15 @@ function PageLayout() {
           return '';
         }
         if (visibleChildren.length) {
-          menuMap.current.set(route.key, { subMenu: true });
+          menuMap.current.set(route.fullPath, { subMenu: true });
           return (
-            <SubMenu key={route.key} title={titleDom}>
+            <SubMenu key={route.fullPath} title={titleDom}>
               {travel(visibleChildren, level + 1, [...parentNode, route.name])}
             </SubMenu>
           );
         }
-        menuMap.current.set(route.key, { menuItem: true });
-        return <MenuItem key={route.key}>{titleDom}</MenuItem>;
+        menuMap.current.set(route.fullPath, { menuItem: true });
+        return <MenuItem key={route.fullPath}>{titleDom}</MenuItem>;
       });
     };
   }
@@ -195,8 +197,8 @@ function PageLayout() {
               <div className={styles['menu-wrapper']}>
                 <Menu
                   collapse={collapsed}
-                  onClickMenuItem={(key) => {
-                    router.to(key);
+                  onClickMenuItem={(fullPath) => {
+                    to(fullPath);
                   }}
                   selectedKeys={selectedKeys}
                   openKeys={openKeys}
@@ -204,7 +206,7 @@ function PageLayout() {
                     setOpenKeys(openKeys);
                   }}
                 >
-                  {renderRoutes(locale)(routes, 1)}
+                  {renderRoutes(locale)(fullPathRoutes, 1)}
                 </Menu>
               </div>
               <div className={styles['collapse-btn']} onClick={toggleCollapse}>

@@ -23,11 +23,11 @@ export const routes: IRoute[] = [
     children: [
       {
         name: 'menu.dashboard.workplace',
-        key: 'dashboard/workplace',
+        key: '/dashboard/workplace',
       },
       {
         name: 'menu.dashboard.monitor',
-        key: 'dashboard/monitor',
+        key: '/dashboard/monitor',
         requiredPermissions: [
           { resource: 'menu.dashboard.monitor', actions: ['write'] },
         ],

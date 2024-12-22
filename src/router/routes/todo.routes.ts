@@ -5,6 +5,10 @@ export const todoRoutes: IRoute = {
   key: '/todo',
   children: [
     {
+      name: 'menu.todo.today',
+      key: 'TodoToday',
+    },
+    {
       name: 'menu.todo.list',
       key: 'TodoList',
     },
