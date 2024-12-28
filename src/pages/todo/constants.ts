@@ -1,23 +1,23 @@
 export const IMPORTANCE_LEVELS = {
-  low: 'Low Importance',
-  medium: 'Medium Importance',
-  high: 'High Importance',
+  low: '低',
+  medium: '中',
+  high: '高',
 } as const;
 
 export const URGENCY_LEVELS = {
-  low: 'Low Urgency',
-  medium: 'Medium Urgency',
-  high: 'High Urgency',
+  low: '低',
+  medium: '中',
+  high: '高',
 } as const;
 
 export const RECURRENCE_PATTERNS = {
-  none: 'No Recurrence',
-  daily: 'Daily',
-  weekdays: 'Every Weekday',
-  weekly: 'Weekly',
-  monthly: 'Monthly',
-  yearly: 'Yearly',
-  custom: 'Custom',
+  none: '不重复',
+  daily: '每日',
+  weekdays: '每周工作日',
+  weekly: '每周',
+  monthly: '每月',
+  yearly: '每年',
+  custom: '自定义',
 } as const;
 
 export function getPriorityQuadrant(

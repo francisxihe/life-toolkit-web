@@ -25,10 +25,12 @@ export type TodoFormData = z.infer<typeof todoSchema>;
 export interface Todo {
   id: string;
   task: string;
-  description?: string;
-  completed: boolean;
-  importance: string;
-  urgency: string;
   endDateTime: string;
+  description?: string;
+  importance: 'high' | 'low';
+  urgency: 'high' | 'low';
   tags: string[];
+  completed: boolean;
+  startDate: string | Date;
+  completedAt: string | Date;
 }

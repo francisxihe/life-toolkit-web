@@ -1,14 +1,3 @@
-export interface Todo {
-  id: number;
-  task: string;
-  description?: string;
-  importance: 'high' | 'low';
-  urgency: 'high' | 'low';
-  tags: string[];
-  completed: boolean;
-  startDate: string | Date;
-  completedAt: string | Date;
-}
 
 export interface TodoFilters {
   search: string;

@@ -28,7 +28,10 @@ export default function useRouter() {
     [routes]
   );
 
+  console.log('fullPathRoutes', fullPathRoutes);
+
   function routerTo(key) {
+    console.log('key', key);
     const currentRoute = flattenRoutes.find((r) => r.fullPath === key);
     const component = currentRoute.component;
     const preload = component.preload();
@@ -41,6 +44,7 @@ export default function useRouter() {
   }
 
   return {
+    flattenRoutes,
     fullPathRoutes,
     to: routerTo,
     defaultRoute,

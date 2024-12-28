@@ -1,6 +1,5 @@
 'use client';
 
-import { useMemo } from 'react';
 import {
   Checkbox,
   Card,
@@ -11,55 +10,16 @@ import {
 } from '@arco-design/web-react';
 import { useTodoContext } from '../context/todo-context';
 import { getPriorityQuadrant } from '../constants';
+import { Todo } from '../types';
 
 const { Text, Paragraph } = Typography;
 
-export function TodoList() {
-  const { todoList, filters, toggleTodo, deleteTodo } = useTodoContext();
-
-  const filteredTodos = useMemo(() => {
-    return todoList.filter((todo) => {
-      const matchesSearch =
-        todo.task.toLowerCase().includes(filters.search.toLowerCase()) ||
-        todo.description?.toLowerCase().includes(filters.search.toLowerCase());
-      const matchesImportance =
-        filters.importance === 'all' || todo.importance === filters.importance;
-      const matchesUrgency =
-        filters.urgency === 'all' || todo.urgency === filters.urgency;
-      const matchesStatus =
-        filters.status === 'all' ||
-        (filters.status === 'completed' ? todo.completed : !todo.completed);
-      const matchesTags =
-        filters.tags.length === 0 ||
-        filters.tags.some((tag) => todo.tags.includes(tag));
-
-      return (
-        matchesSearch &&
-        matchesImportance &&
-        matchesUrgency &&
-        matchesStatus &&
-        matchesTags
-      );
-    });
-  }, [todoList, filters]);
-
-  if (filteredTodos.length === 0) {
-    return (
-      <div
-        style={{
-          textAlign: 'center',
-          padding: '24px',
-          color: 'var(--color-text-3)',
-        }}
-      >
-        No todos found matching the current filters
-      </div>
-    );
-  }
+export function TodoList({ todoList }: { todoList: Todo[] }) {
+  const { toggleTodo, deleteTodo } = useTodoContext();
 
   return (
     <Space direction="vertical" style={{ width: '100%' }} size="medium">
-      {filteredTodos.map((todo) => (
+      {todoList.map((todo) => (
         <Card key={todo.id} style={{ width: '100%' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <Space align="start">

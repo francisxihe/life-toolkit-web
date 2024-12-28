@@ -25,13 +25,13 @@ export function TodoStats() {
     <Row gutter={[16, 16]}>
       <Col span={6}>
         <Card>
-          <Title heading={6}>Total Tasks</Title>
+          <Title heading={6}>总计</Title>
           <Text style={{ fontSize: 24, fontWeight: 600 }}>{stats.total}</Text>
         </Card>
       </Col>
       <Col span={6}>
         <Card>
-          <Title heading={6}>Completed</Title>
+          <Title heading={6}>已完成</Title>
           <Text style={{ fontSize: 24, fontWeight: 600 }}>
             {stats.completed}
           </Text>
@@ -39,13 +39,13 @@ export function TodoStats() {
       </Col>
       <Col span={6}>
         <Card>
-          <Title heading={6}>Pending</Title>
+          <Title heading={6}>未完成</Title>
           <Text style={{ fontSize: 24, fontWeight: 600 }}>{stats.pending}</Text>
         </Card>
       </Col>
       <Col span={6}>
         <Card>
-          <Title heading={6}>High Priority</Title>
+          <Title heading={6}>高优先级</Title>
           <Text style={{ fontSize: 24, fontWeight: 600 }}>
             {stats.highPriority}
           </Text>

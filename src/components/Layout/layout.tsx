@@ -1,57 +1,19 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import { useLocation, Outlet } from 'react-router-dom';
-import { Layout, Menu, Breadcrumb, Spin } from '@arco-design/web-react';
+import { Layout, Breadcrumb, Spin } from '@arco-design/web-react';
 import cs from 'classnames';
-import {
-  IconDashboard,
-  IconList,
-  IconSettings,
-  IconFile,
-  IconApps,
-  IconCheckCircle,
-  IconExclamationCircle,
-  IconUser,
-  IconMenuFold,
-  IconMenuUnfold,
-} from '@arco-design/web-react/icon';
+import { IconMenuFold, IconMenuUnfold } from '@arco-design/web-react/icon';
 import { useSelector } from 'react-redux';
-import qs from 'query-string';
 import Navbar from '../NavBar';
 import Footer from '../Footer';
-import useRoute, { IRoute } from '@/router/routes';
-import useRouter from '@/router/useRouter';
 import useLocale from '../../utils/useLocale';
 import getUrlParams from '../../utils/getUrlParams';
 import { GlobalState } from '../../store';
 import styles from './layout.module.less';
-const MenuItem = Menu.Item;
-const SubMenu = Menu.SubMenu;
+import Navigate from './Navigate';
 
 const Sider = Layout.Sider;
 const Content = Layout.Content;
-
-function getIconFromKey(key) {
-  switch (key) {
-    case 'dashboard':
-      return <IconDashboard className={styles.icon} />;
-    case 'list':
-      return <IconList className={styles.icon} />;
-    case 'form':
-      return <IconSettings className={styles.icon} />;
-    case 'profile':
-      return <IconFile className={styles.icon} />;
-    case 'visualization':
-      return <IconApps className={styles.icon} />;
-    case 'result':
-      return <IconCheckCircle className={styles.icon} />;
-    case 'exception':
-      return <IconExclamationCircle className={styles.icon} />;
-    case 'user':
-      return <IconUser className={styles.icon} />;
-    default:
-      return <div className={styles['icon-empty']} />;
-  }
-}
 
 import { RouterContext } from '@/router/useRouter';
 
@@ -60,28 +22,13 @@ function PageLayout() {
   const urlParams = getUrlParams();
   const location = useLocation();
   const pathname = location.pathname;
-  const currentComponent = qs.parseUrl(pathname).url.slice(1);
   const locale = useLocale();
   const { settings, userLoading } = useSelector((state: GlobalState) => state);
 
-  const { fullPathRoutes, to, defaultRoute } = useRouter();
-
-  console.log('defaultRoute', currentComponent, defaultRoute);
-
-  const defaultSelectedKeys = [currentComponent || defaultRoute];
-  const paths = (currentComponent || defaultRoute).split('/');
-  const defaultOpenKeys = paths.slice(0, paths.length - 1);
-
   const [breadcrumb, setBreadCrumb] = useState([]);
   const [collapsed, setCollapsed] = useState<boolean>(false);
-  const [selectedKeys, setSelectedKeys] =
-    useState<string[]>(defaultSelectedKeys);
-  const [openKeys, setOpenKeys] = useState<string[]>(defaultOpenKeys);
 
   const routeMap = useRef<Map<string, React.ReactNode[]>>(new Map());
-  const menuMap = useRef<
-    Map<string, { menuItem?: boolean; subMenu?: boolean }>
-  >(new Map());
 
   const navbarHeight = 60;
   const menuWidth = collapsed ? 48 : settings.menuWidth;
@@ -98,76 +45,9 @@ function PageLayout() {
   const paddingTop = showNavbar ? { paddingTop: navbarHeight } : {};
   const paddingStyle = { ...paddingLeft, ...paddingTop };
 
-  function renderRoutes(locale) {
-    routeMap.current.clear();
-    return function travel(_routes: IRoute[], level, parentNode = []) {
-      return _routes.map((route) => {
-        const { breadcrumb = true, ignore } = route;
-        const iconDom = getIconFromKey(route.fullPath);
-        const titleDom = (
-          <>
-            {iconDom} {locale[route.name] || route.name}
-          </>
-        );
-
-        routeMap.current.set(
-          `/${route.fullPath}`,
-          breadcrumb ? [...parentNode, route.name] : []
-        );
-
-        const visibleChildren = (route.children || []).filter((child) => {
-          const { ignore, breadcrumb = true } = child;
-          if (ignore || route.ignore) {
-            routeMap.current.set(
-              `/${child.fullPath}`,
-              breadcrumb ? [...parentNode, route.name, child.name] : []
-            );
-          }
-
-          return !ignore;
-        });
-
-        if (ignore) {
-          return '';
-        }
-        if (visibleChildren.length) {
-          menuMap.current.set(route.fullPath, { subMenu: true });
-          return (
-            <SubMenu key={route.fullPath} title={titleDom}>
-              {travel(visibleChildren, level + 1, [...parentNode, route.name])}
-            </SubMenu>
-          );
-        }
-        menuMap.current.set(route.fullPath, { menuItem: true });
-        return <MenuItem key={route.fullPath}>{titleDom}</MenuItem>;
-      });
-    };
-  }
-
-  function updateMenuStatus() {
-    const pathKeys = pathname.split('/');
-    const newSelectedKeys: string[] = [];
-    const newOpenKeys: string[] = [...openKeys];
-    while (pathKeys.length > 0) {
-      const currentRouteKey = pathKeys.join('/');
-      const menuKey = currentRouteKey.replace(/^\//, '');
-      const menuType = menuMap.current.get(menuKey);
-      if (menuType && menuType.menuItem) {
-        newSelectedKeys.push(menuKey);
-      }
-      if (menuType && menuType.subMenu && !openKeys.includes(menuKey)) {
-        newOpenKeys.push(menuKey);
-      }
-      pathKeys.pop();
-    }
-    setSelectedKeys(newSelectedKeys);
-    setOpenKeys(newOpenKeys);
-  }
-
   useEffect(() => {
     const routeConfig = routeMap.current.get(pathname);
     setBreadCrumb(routeConfig || []);
-    updateMenuStatus();
   }, [pathname]);
 
   return (
@@ -195,19 +75,7 @@ function PageLayout() {
               style={paddingTop}
             >
               <div className={styles['menu-wrapper']}>
-                <Menu
-                  collapse={collapsed}
-                  onClickMenuItem={(fullPath) => {
-                    to(fullPath);
-                  }}
-                  selectedKeys={selectedKeys}
-                  openKeys={openKeys}
-                  onClickSubMenu={(_, openKeys) => {
-                    setOpenKeys(openKeys);
-                  }}
-                >
-                  {renderRoutes(locale)(fullPathRoutes, 1)}
-                </Menu>
+                <Navigate collapsed={collapsed} locale={locale} />
               </div>
               <div className={styles['collapse-btn']} onClick={toggleCollapse}>
                 {collapsed ? <IconMenuUnfold /> : <IconMenuFold />}
