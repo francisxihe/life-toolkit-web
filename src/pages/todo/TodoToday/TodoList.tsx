@@ -8,14 +8,15 @@ import {
   Space,
   Typography,
 } from '@arco-design/web-react';
-import { useTodoContext } from '../context/todo-context';
+import { useTodoContext } from '../context/TodoContext';
 import { getPriorityQuadrant } from '../constants';
 import { Todo } from '../types';
+import { Popover } from '@arco-design/web-react';
 
 const { Text, Paragraph } = Typography;
 
 export function TodoList({ todoList }: { todoList: Todo[] }) {
-  const { toggleTodo, deleteTodo } = useTodoContext();
+  const { toggleTodo, deleteTodo, abandonTodo } = useTodoContext();
 
   return (
     <Space direction="vertical" style={{ width: '100%' }} size="medium">
@@ -59,20 +60,36 @@ export function TodoList({ todoList }: { todoList: Todo[] }) {
                 <Space style={{ marginTop: '8px' }}>
                   <Text type="secondary">Due: {todo.endDateTime}</Text>
                   <Text type="secondary">
-                    Priority:{' '}
+                    优先级:
                     {getPriorityQuadrant(todo.importance, todo.urgency)}
                   </Text>
                 </Space>
               </div>
             </Space>
-            <Button
-              type="primary"
-              status="danger"
-              size="small"
-              onClick={() => deleteTodo(todo.id)}
+
+            <Popover
+              trigger="click"
+              content={
+                <div className="w-40">
+                  <div
+                    className="cursor-pointer px-3 h-9 leading-9 hover:bg-fill-2"
+                    onClick={() => abandonTodo(todo.id)}
+                  >
+                    放弃
+                  </div>
+                  <div
+                    className="cursor-pointer px-3 h-9 leading-9 hover:bg-fill-2"
+                    onClick={() => deleteTodo(todo.id)}
+                  >
+                    删除
+                  </div>
+                </div>
+              }
             >
-              Delete
-            </Button>
+              <svg width={16} height={16}>
+                <use href={`/public/icons.svg#more-for-task`} />
+              </svg>
+            </Popover>
           </div>
         </Card>
       ))}

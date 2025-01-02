@@ -14,15 +14,24 @@ interface TodoContextType {
   todoList: Todo[];
   filters: TodoFilters;
   setFilters: Dispatch<SetStateAction<TodoFilters>>;
-  addTodo: (todo: Omit<Todo, 'id' | 'completed'>) => void;
+  addTodo: (todo: Omit<Todo, 'id' | 'completed' | 'createdAt'>) => void;
   toggleTodo: (id: string) => void;
   deleteTodo: (id: string) => void;
+  abandonTodo: (id: string) => void;
 }
 
 const TodoContext = createContext<TodoContextType | undefined>(undefined);
 
 export function TodoProvider({ children }: { children: React.ReactNode }) {
-  const [todoList, setTodoList] = useState<Todo[]>([]);
+  const [todoList, setTodoList] = useState<Todo[]>([
+    {
+      id: '1',
+      task: 'test',
+      completed: false,
+      createdAt: new Date().toISOString(),
+      tags: [],
+    },
+  ]);
   const [filters, setFilters] = useState<TodoFilters>({
     search: '',
     importance: 'all',
@@ -35,9 +44,10 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     setTodoList((prev) => [
       ...prev,
       {
-        ...todo,
         id: Math.random().toString(36).substring(7),
         completed: false,
+        createdAt: new Date().toISOString(),
+        ...todo,
       },
     ]);
   }, []);
@@ -54,6 +64,16 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     setTodoList((prev) => prev.filter((todo) => todo.id !== id));
   }, []);
 
+  const abandonTodo = useCallback((id: string) => {
+    setTodoList((prev) =>
+      prev.map((todo) =>
+        todo.id === id
+          ? { ...todo, abandoned: true, abandonedAt: new Date().toISOString() }
+          : todo
+      )
+    );
+  }, []);
+
   return (
     <TodoContext.Provider
       value={{
@@ -63,6 +83,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
         addTodo,
         toggleTodo,
         deleteTodo,
+        abandonTodo,
       }}
     >
       {children}

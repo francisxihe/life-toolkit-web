@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { format, isWithinInterval } from 'date-fns';
 import { Card, Grid, Typography, Statistic } from '@arco-design/web-react';
-import { useTodoContext } from '../context/todo-context';
+import { useTodoContext } from '../context/TodoContext';
 import { CompletedTodoList } from './components/completed-todo-list';
 import {
   HistoryFilters,
@@ -97,7 +97,7 @@ export default function TodoHistoryPage() {
     ).length;
     const avgCompletionTime =
       filteredTodos.reduce((acc, todo) => {
-        const start = new Date(todo.startDate);
+        const start = new Date(todo.startDateTime);
         const end = new Date(todo.completedAt);
         return acc + (end.getTime() - start.getTime());
       }, 0) / (total || 1);

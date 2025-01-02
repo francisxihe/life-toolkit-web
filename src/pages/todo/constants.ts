@@ -24,8 +24,8 @@ export function getPriorityQuadrant(
   importance: string,
   urgency: string
 ): string {
-  if (importance === 'high' && urgency === 'high') return 'Critical';
-  if (importance === 'high' && urgency !== 'high') return 'Important';
-  if (importance !== 'high' && urgency === 'high') return 'Urgent';
-  return 'Regular';
+  if (importance === 'high' && urgency === 'high') return '紧急且重要';
+  if (importance === 'high' && urgency !== 'high') return '重要';
+  if (importance !== 'high' && urgency === 'high') return '紧急';
+  return '常规';
 }

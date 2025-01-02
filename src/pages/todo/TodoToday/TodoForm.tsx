@@ -10,7 +10,7 @@ import {
 } from '@arco-design/web-react';
 import { IconDown } from '@arco-design/web-react/icon';
 import * as z from 'zod';
-import { useTodoContext } from '../context/todo-context';
+import { useTodoContext } from '../context/TodoContext';
 import {
   IMPORTANCE_LEVELS,
   URGENCY_LEVELS,
@@ -43,7 +43,7 @@ const todoSchema = z.object({
 export function TodoForm() {
   const { addTodo } = useTodoContext();
 
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState<z.infer<typeof todoSchema>>({});
   const onSubmit = () => {
     const values = todoSchema.parse(formData);
     if (!values.task) {
@@ -54,8 +54,8 @@ export function TodoForm() {
       task: values.task,
       importance: values.importance as 'low' | 'medium' | 'high',
       urgency: values.urgency as 'low' | 'medium' | 'high',
-      startDateTime: values.timeRange[0],
-      endDateTime: values.timeRange[1],
+      startDateTime: values.timeRange[0] || undefined,
+      endDateTime: values.timeRange[1] || undefined,
       recurring: values.recurring,
       tags: values.tags,
     });
@@ -68,8 +68,8 @@ export function TodoForm() {
   return (
     <div>
       <Input
+        size="large"
         placeholder="请输入任务标题"
-        className="py-2"
         value={formData.task}
         onChange={(value) => {
           setFormData((prev) => ({ ...prev, task: value }));
@@ -81,8 +81,9 @@ export function TodoForm() {
           }
         }}
         suffix={
-          <>
+          <div className="flex items-center gap-2">
             <Popover
+              trigger="click"
               content={
                 <div>
                   <FormItem label="起止时间" field={'timeRange'}>
@@ -103,7 +104,7 @@ export function TodoForm() {
                 </div>
               }
             >
-              <div className="flex items-center gap-2">
+              <div className="px-3 py-1.5 my-1.5 rounded-sm hover:bg-fill-3 flex items-center gap-2 cursor-pointer">
                 <Icon width={16} height={16} id="today-icon-27" />
                 今天
               </div>
@@ -152,14 +153,11 @@ export function TodoForm() {
               }
               trigger="click"
             >
-              <Button
-                type="secondary"
-                iconOnly
-                size="small"
-                icon={<IconDown />}
-              ></Button>
+              <div className="px-1.5 py-1.5 my-1.5 rounded-sm hover:bg-fill-3 cursor-pointer">
+                <IconDown />
+              </div>
             </Popover>
-          </>
+          </div>
         }
       />
     </div>

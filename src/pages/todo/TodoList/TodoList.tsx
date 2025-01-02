@@ -9,7 +9,7 @@ import {
   Space,
   Typography,
 } from '@arco-design/web-react';
-import { useTodoContext } from '../context/todo-context';
+import { useTodoContext } from '../context/TodoContext';
 import { getPriorityQuadrant } from '../constants';
 
 const { Text, Paragraph } = Typography;
@@ -99,7 +99,7 @@ export function TodoList() {
                 <Space style={{ marginTop: '8px' }}>
                   <Text type="secondary">Due: {todo.endDateTime}</Text>
                   <Text type="secondary">
-                    Priority:{' '}
+                    优先级:
                     {getPriorityQuadrant(todo.importance, todo.urgency)}
                   </Text>
                 </Space>

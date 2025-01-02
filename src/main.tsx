@@ -1,4 +1,3 @@
-import './style/global.less';
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { createStore } from 'redux';
@@ -6,6 +5,7 @@ import { Provider } from 'react-redux';
 import { ConfigProvider } from '@arco-design/web-react';
 import zhCN from '@arco-design/web-react/es/locale/zh-CN';
 import enUS from '@arco-design/web-react/es/locale/en-US';
+import './style/global.less';
 import { BrowserRouter } from 'react-router-dom';
 import axios from 'axios';
 import rootReducer from './store';
