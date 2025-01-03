@@ -8,8 +8,6 @@ function Router() {
   const router = useRouter();
 
   function renderRouteComponent(routes: FlattenRoute[]) {
-    console.log('routes', routes);
-
     return routes.map((route) => {
       return (
         route.component && (

@@ -95,11 +95,11 @@ function PageLayout() {
                   </Breadcrumb>
                 </div>
               )}
-              <Content>
+              <Content className={'h-full w-full'}>
                 <Outlet />
               </Content>
             </div>
-            {showFooter && <Footer />}
+            {/* {showFooter && <Footer />} */}
           </Layout>
         </Layout>
       )}

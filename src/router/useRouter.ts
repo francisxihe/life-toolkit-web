@@ -29,6 +29,7 @@ export default function useRouter() {
   );
 
   console.log('fullPathRoutes', fullPathRoutes);
+  console.log('flattenRoutes', flattenRoutes);
 
   function routerTo(key) {
     console.log('key', key);
@@ -59,14 +60,14 @@ export function getFlattenRoutes(routes: IRoute[]) {
 
       try {
         flattenRoute.fullPath = undefined;
-        if (flattenRoute.key && !flattenRoute.onlyMenu) {
+        if (flattenRoute.key) {
           if (/^\//.test(flattenRoute.key)) {
             flattenRoute.fullPath = flattenRoute.key;
           } else if (parentPath) {
             flattenRoute.fullPath = `${parentPath}/${flattenRoute.key}`;
           }
         }
-        if (flattenRoute.fullPath) {
+        if (flattenRoute.fullPath && !flattenRoute.onlyMenu) {
           flattenRoute.component = lazyload(
             getComponentModule(flattenRoute.fullPath)
           );

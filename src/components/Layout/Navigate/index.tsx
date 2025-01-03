@@ -71,14 +71,16 @@ const Navigate: React.FC<NavigateProps> = ({ collapsed, locale }) => {
         });
 
         if (ignore) {
-          return '';
+          return null;
         }
         if (visibleChildren.length) {
           menuMap.current.set(route.fullPath, { subMenu: true });
           return (
-            <SubMenu key={route.fullPath} title={titleDom}>
-              {travel(visibleChildren, level + 1, [...parentNode, route.name])}
-            </SubMenu>
+            route.fullPath && (
+              <SubMenu key={route.fullPath} title={titleDom}>
+                {travel(visibleChildren, level + 1, [...parentNode, route.name])}
+              </SubMenu>
+            )
           );
         }
         menuMap.current.set(route.fullPath, { menuItem: true });

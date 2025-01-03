@@ -57,6 +57,9 @@ const i18n = {
     'message.empty.tips': 'No Content',
     'message.lang.tips': 'Language switch to ',
     'navbar.search.placeholder': 'Please search',
+    'menu.todo': 'Todo',
+    'menu.todo.today': 'Today Todo',
+    'menu.todo.all': 'All Todo',
   },
   'zh-CN': {
     'menu.dashboard': '仪表盘',
@@ -115,6 +118,9 @@ const i18n = {
     'message.empty.tips': '暂无内容',
     'message.lang.tips': '语言切换至 ',
     'navbar.search.placeholder': '输入内容查询',
+    'menu.todo': '待办事项',
+    'menu.todo.today': '今日待办',
+    'menu.todo.all': '全部待办',
   },
 };
 
