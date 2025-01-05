@@ -33,7 +33,8 @@ const todoSchema = z.object({
   tags: z.array(z.string()).default([]),
   importance: z.enum(['low', 'medium', 'high']).default('medium'),
   urgency: z.enum(['low', 'medium', 'high']).default('medium'),
-  timeRange: z.tuple([z.string(), z.string()]).default(['', '']),
+  planDate: z.string().default(''),
+  planTimeRange: z.tuple([z.string(), z.string()]).default(['', '']),
   recurring: z
     .enum(['none', 'daily', 'weekly', 'monthly', 'yearly'])
     .default('none'),
@@ -53,8 +54,9 @@ export function TodoForm() {
       task: values.task,
       importance: values.importance as 'low' | 'medium' | 'high',
       urgency: values.urgency as 'low' | 'medium' | 'high',
-      startDateTime: values.timeRange[0] || undefined,
-      endDateTime: values.timeRange[1] || undefined,
+      planDate: values.planDate || undefined,
+      planStartAt: values.planTimeRange[0] || undefined,
+      planEndAt: values.planTimeRange[1] || undefined,
       recurring: values.recurring,
       tags: values.tags,
     });
@@ -85,7 +87,13 @@ export function TodoForm() {
               trigger="click"
               content={
                 <div>
-                  <FormItem label="起止时间" field={'timeRange'}>
+                  <FormItem label="日期" field={'planDate'}>
+                    <DatePicker
+                      className="w-full rounded-md"
+                      placeholder="请选择计划日期"
+                    />
+                  </FormItem>
+                  <FormItem label="起止时间" field={'planTimeRange'}>
                     <RangePicker showTime className="w-full rounded-md" />
                   </FormItem>
 

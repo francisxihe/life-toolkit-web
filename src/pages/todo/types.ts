@@ -24,32 +24,34 @@ export type TodoFormData = z.infer<typeof todoSchema>;
 
 export interface Todo {
   id: string;
-  /** 任务名称 */
+  /** 待办名称 */
   task: string;
-  /** 任务描述 */
+  /** 待办描述 */
   description?: string;
-  /** 任务重要程度 */
+  /** 待办重要程度 */
   importance?: 'low' | 'medium' | 'high';
-  /** 任务紧急程度 */
+  /** 待办紧急程度 */
   urgency?: 'high' | 'medium' | 'low';
-  /** 任务标签 */
+  /** 待办标签 */
   tags: string[];
-  /** 任务是否完成 */
+  /** 待办是否完成 */
   completed: boolean;
-  /** 预计任务开始时间 */
-  startDateTime?: string;
-  /** 预计任务结束时间 */
-  endDateTime?: string;
-  /** 任务开始时间 */
+  /** 待办开始时间 */
   startAt?: string;
-  /** 任务完成时间 */
+  /** 待办完成时间 */
   completedAt?: string;
-  /** 任务创建时间 */
+  /** 计划待办日期 */
+  planDate?: string;
+  /** 计划待办开始时间 */
+  planStartAt?: string;
+  /** 计划待办结束时间 */
+  planEndAt?: string;
+  /** 待办创建时间 */
   createdAt: string;
-  /** 任务是否是重复任务 */
+  /** 待办是否是重复待办 */
   recurring?: string;
-  /** 任务是否是放弃任务 */
+  /** 待办是否是放弃待办 */
   abandoned?: boolean;
-  /** 放弃任务时间 */
+  /** 放弃待办时间 */
   abandonedAt?: string;
 }

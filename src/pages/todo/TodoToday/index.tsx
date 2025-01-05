@@ -4,6 +4,8 @@ import { useTodoContext } from '../context/TodoContext';
 import { useMemo } from 'react';
 import dayjs from 'dayjs';
 import FlexibleContainer from '@/components/FlexibleContainer';
+import { Collapse } from '@arco-design/web-react';
+import styles from './style.module.less';
 
 const today = dayjs().format('YYYY-MM-DD');
 export default function TodoPage() {
@@ -17,44 +19,58 @@ export default function TodoPage() {
 
   const todayTodos = useMemo(() => {
     return todoList.filter(
-      (todo) =>
-        !todo.completed && dayjs(todo.startDateTime).isSame(today, 'day')
+      (todo) => !todo.completed && dayjs(todo.planDate).isSame(today, 'day')
     );
   }, [todoList]);
 
   const expiredTodos = useMemo(() => {
     return todoList.filter(
-      (todo) =>
-        !todo.completed && dayjs(todo.startDateTime).isBefore(today, 'day')
+      (todo) => !todo.completed && dayjs(todo.planDate).isBefore(today, 'day')
     );
   }, [todoList]);
 
   return (
-    <FlexibleContainer className="bg-white rounded-lg w-full h-full">
-      <FlexibleContainer.Fixed className="px-4 py-2 flex justify-between items-center border-b border-gray-100">
-        <div className="text-2xl font-bold py-3">今日代办</div>
+    <FlexibleContainer className="bg-background-2 rounded-lg w-full h-full">
+      <FlexibleContainer.Fixed className="px-4 py-2 flex justify-between items-center border-b">
+        <div className="text-text-1 text-2xl font-bold py-3">今日代办</div>
       </FlexibleContainer.Fixed>
 
       <FlexibleContainer.Shrink className="px-4 py-2 w-full h-full">
         <TodoForm />
-        {expiredTodos.length > 0 && (
-          <>
-            <div className="text-sm text-gray-500">已过期</div>
-            <TodoList todoList={expiredTodos} />
-          </>
-        )}
-        {todayTodos.length > 0 && (
-          <>
-            <div className="text-sm text-gray-500">今天</div>
-            <TodoList todoList={todayTodos} />
-          </>
-        )}
-        {todayDoneTodos.length > 0 && (
-          <>
-            <div className="text-sm text-gray-500">已完成</div>
-            <TodoList todoList={todayDoneTodos} />
-          </>
-        )}
+
+        <Collapse
+          defaultActiveKey={['expired', 'today']}
+          className={`${styles['custom-collapse']} mt-2`}
+          bordered={false}
+        >
+          {expiredTodos.length > 0 && (
+            <Collapse.Item
+              header="已过期"
+              name="expired"
+              contentStyle={{ padding: 0 }}
+            >
+              <TodoList todoList={expiredTodos} />
+            </Collapse.Item>
+          )}
+          {todayTodos.length > 0 && (
+            <Collapse.Item
+              header="今天"
+              name="today"
+              contentStyle={{ padding: 0 }}
+            >
+              <TodoList todoList={todayTodos} />
+            </Collapse.Item>
+          )}
+          {todayDoneTodos.length > 0 && (
+            <Collapse.Item
+              header="已完成"
+              name="done"
+              contentStyle={{ padding: 0 }}
+            >
+              <TodoList todoList={todayDoneTodos} />
+            </Collapse.Item>
+          )}
+        </Collapse>
       </FlexibleContainer.Shrink>
     </FlexibleContainer>
   );

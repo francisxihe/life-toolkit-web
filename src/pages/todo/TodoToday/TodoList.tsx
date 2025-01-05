@@ -1,17 +1,11 @@
 'use client';
 
-import {
-  Checkbox,
-  Card,
-  Button,
-  Tag,
-  Space,
-  Typography,
-} from '@arco-design/web-react';
+import { Checkbox, Card, Tag, Space, Typography } from '@arco-design/web-react';
 import { useTodoContext } from '../context/TodoContext';
-import { getPriorityQuadrant } from '../constants';
 import { Todo } from '../types';
 import { Popover } from '@arco-design/web-react';
+import styles from './style.module.less';
+import { isToday } from 'date-fns';
 
 const { Text, Paragraph } = Typography;
 
@@ -19,12 +13,13 @@ export function TodoList({ todoList }: { todoList: Todo[] }) {
   const { toggleTodo, deleteTodo, abandonTodo } = useTodoContext();
 
   return (
-    <Space direction="vertical" style={{ width: '100%' }} size="medium">
+    <div className="w-full">
       {todoList.map((todo) => (
-        <Card key={todo.id} style={{ width: '100%' }}>
+        <Card className={'w-full border-b py-0'} key={todo.id}>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <Space align="start">
               <Checkbox
+                className={styles['custom-checkbox']}
                 checked={todo.completed}
                 onChange={() => toggleTodo(todo.id)}
               />
@@ -58,11 +53,20 @@ export function TodoList({ todoList }: { todoList: Todo[] }) {
                   ))}
                 </Space>
                 <Space style={{ marginTop: '8px' }}>
-                  <Text type="secondary">Due: {todo.endDateTime}</Text>
-                  <Text type="secondary">
+                  {/* <Text type="secondary">
                     优先级:
                     {getPriorityQuadrant(todo.importance, todo.urgency)}
-                  </Text>
+                  </Text> */}
+                  {isToday(todo.planDate) || (
+                    <>
+                      <Text type="secondary">{todo.planDate}</Text>
+                      {todo.planStartAt && todo.planEndAt && (
+                        <Text type="secondary">
+                          {todo.planStartAt}-{todo.planEndAt}
+                        </Text>
+                      )}
+                    </>
+                  )}
                 </Space>
               </div>
             </Space>
@@ -93,6 +97,6 @@ export function TodoList({ todoList }: { todoList: Todo[] }) {
           </div>
         </Card>
       ))}
-    </Space>
+    </div>
   );
 }

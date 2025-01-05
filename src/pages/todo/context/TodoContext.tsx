@@ -9,7 +9,7 @@ import {
   SetStateAction,
 } from 'react';
 import { Todo, TodoFilters } from '../types';
-
+import dayjs from 'dayjs';
 interface TodoContextType {
   todoList: Todo[];
   filters: TodoFilters;
@@ -28,8 +28,31 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       id: '1',
       task: 'test',
       completed: false,
-      createdAt: new Date().toISOString(),
+      createdAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       tags: [],
+      planDate: dayjs('2025-01-01').format('YYYY-MM-DD'),
+      planStartAt: '10:00:00',
+      planEndAt: '12:00:00',
+    },
+    {
+      id: '2',
+      task: 'test',
+      completed: false,
+      createdAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      tags: [],
+      planDate: dayjs('2025-01-01').format('YYYY-MM-DD'),
+      planStartAt: '11:00:00',
+      planEndAt: '12:00:00',
+    },
+    {
+      id: '3',
+      task: 'test',
+      completed: false,
+      createdAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+      tags: [],
+      planDate: dayjs().format('YYYY-MM-DD'),
+      planStartAt: '11:00:00',
+      planEndAt: '12:00:00',
     },
   ]);
   const [filters, setFilters] = useState<TodoFilters>({

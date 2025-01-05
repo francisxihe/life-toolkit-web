@@ -6,10 +6,26 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        border: 'hsl(var(--border))',
+        border: {
+          default: 'var(--color-border-1)',
+          1: 'var(--color-border-1)',
+          2: 'var(--color-border-2)',
+          3: 'var(--color-border-3)',
+        },
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
-        background: 'hsl(var(--background))',
+        background: {
+          default: 'var(--color-bg-1)',
+          1: 'var(--color-bg-1)',
+          2: 'var(--color-bg-2)',
+        },
+        text: {
+          default: 'var(--color-text-1)',
+          1: 'var(--color-text-1)',
+          2: 'var(--color-text-2)',
+          3: 'var(--color-text-3)',
+        },
+
         foreground: 'hsl(var(--foreground))',
         primary: {
           DEFAULT: 'hsl(var(--primary))',
