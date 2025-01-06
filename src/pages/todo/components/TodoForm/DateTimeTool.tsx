@@ -7,12 +7,19 @@ import { useState } from 'react';
 
 const { RangePicker } = TimePicker;
 
-export default function DateTimeTool() {
-  const [date, setDate] = useState(dayjs());
-  const [timeRange, setTimeRange] = useState([
-    dayjs(),
-    dayjs().add(30, 'minute'),
-  ]);
+export default function DateTimeTool(props: {
+  formData: {
+    date: Dayjs;
+    timeRange: [string | undefined, string | undefined];
+    recurring: string | undefined;
+  };
+  onChangeData: (formData: {
+    date: Dayjs;
+    timeRange: [string | undefined, string | undefined];
+    recurring: string | undefined;
+  }) => void;
+}) {
+  const { formData, onChangeData } = props;
   const [mode, setMode] = useState<'month' | 'year'>('month');
   return (
     <Popover
@@ -23,14 +30,17 @@ export default function DateTimeTool() {
             <Calendar
               panel
               panelWidth={'100%'}
-              value={date}
-              defaultValue={date}
+              value={formData.date}
+              defaultValue={dayjs()}
               className="w-full !border-none"
               onChange={(date) => {
                 if (mode === 'year') {
                   setMode('month');
                 } else {
-                  setDate(date);
+                  onChangeData({
+                    ...formData,
+                    date: date,
+                  });
                 }
               }}
               mode={mode}
@@ -55,7 +65,7 @@ export default function DateTimeTool() {
                   </div>
                   <div className="flex items-center gap-2">
                     <IconLeft
-                      className="!text-text-4 cursor-pointer"
+                      className="!text-text-3 cursor-pointer"
                       onClick={() => {
                         if (mode === 'year') {
                           onChangePageDate(pageShowDate?.subtract(1, 'year'));
@@ -65,13 +75,13 @@ export default function DateTimeTool() {
                       }}
                     />
                     <a
-                      className="w-5 h-5 relative group"
+                      className="h-5 text-text-3 text-body-2 relative group cursor-pointer"
                       onClick={() => onChangePageDate(value)}
                     >
-                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full border border-text-4"></div>
+                      今天
                     </a>
                     <IconRight
-                      className="!text-text-4 cursor-pointer"
+                      className="!text-text-3 cursor-pointer"
                       onClick={() => {
                         if (mode === 'year') {
                           onChangePageDate(pageShowDate?.add(1, 'year'));
@@ -85,21 +95,35 @@ export default function DateTimeTool() {
               )}
             />
           </div>
-          <div className="px-3">
+          <div className="px-3 mb-2">
             <RangePicker
-              allowClear
+              value={formData.timeRange}
               className="w-full rounded-md"
               format="HH:mm"
               step={{ minute: 5 }}
               disableConfirm
-              value={timeRange}
+              allowClear
               onChange={(time) => {
-                setTimeRange([dayjs(time[0]), dayjs(time[1])]);
+                onChangeData({
+                  ...formData,
+                  timeRange: [time[0], time[1]],
+                });
               }}
             />
           </div>
           <div className="px-3">
-            <Select placeholder="选择重复模式" className="rounded-md">
+            <Select
+              value={formData.recurring}
+              placeholder="选择重复模式"
+              className="rounded-md"
+              allowClear
+              onChange={(value) => {
+                onChangeData({
+                  ...formData,
+                  recurring: value,
+                });
+              }}
+            >
               {Object.entries(RECURRENCE_PATTERNS).map(([value, label]) => (
                 <Select.Option key={value} value={value}>
                   {label}

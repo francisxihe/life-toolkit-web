@@ -8,20 +8,24 @@ import {
   Typography,
   Input,
   Popover,
+  Button,
 } from '@arco-design/web-react';
-import { useTodoContext } from '../context/TodoContext';
-import { Todo } from '../types';
-import styles from './style.module.less';
+import { useTodoContext } from '../../context/TodoContext';
+import { Todo } from '../../types';
 import { isToday } from 'date-fns';
 import FlexibleContainer from '@/components/FlexibleContainer';
+import { URGENCY_MAP, IMPORTANCE_MAP } from '../../constants';
+import IconSelector from '../IconSelector';
+import styles from './style.module.less';
 
 const { Text, Paragraph } = Typography;
 
 export function TodoList({ todoList }: { todoList: Todo[] }) {
-  const { toggleTodo, deleteTodo, abandonTodo, updateTodo } = useTodoContext();
+  const { toggleTodo, deleteTodo, abandonTodo, updateTodo, showTodoDetail } =
+    useTodoContext();
 
   return (
-    <div className="w-full">
+    <div className="w-full mt-[-8px]">
       {todoList.map((todo) => (
         <div
           className={'w-full border-b px-4 py-2 bg-background'}
@@ -29,15 +33,20 @@ export function TodoList({ todoList }: { todoList: Todo[] }) {
         >
           <FlexibleContainer direction="vertical" className="gap-2 items-start">
             <FlexibleContainer.Fixed className="flex items-start ">
-              <div className="h-7 flex items-center">
+              <div
+                className={`h-8 flex items-center ${styles['custom-checkbox-wrapper']}`}
+              >
                 <Checkbox
                   checked={todo.completed}
                   onChange={() => toggleTodo(todo.id)}
                 />
               </div>
             </FlexibleContainer.Fixed>
-            <FlexibleContainer.Shrink>
-              <div>{todo.name}</div>
+            <FlexibleContainer.Shrink
+              onClick={() => showTodoDetail(todo.id)}
+              className="cursor-pointer"
+            >
+              <div className="leading-8">{todo.name}</div>
               {todo.description && (
                 <Paragraph
                   className="text-body-1 !mb-0.5"
@@ -49,11 +58,25 @@ export function TodoList({ todoList }: { todoList: Todo[] }) {
                   {todo.description}
                 </Paragraph>
               )}
-              <div className="text-body-2">
-                {/* <Text type="secondary">
-                   优先级:
-                   {getPriorityQuadrant(todo.importance, todo.urgency)}
-                 </Text> */}
+              <div className="text-body-2 flex items-center gap-2">
+                {todo.importance && (
+                  <IconSelector
+                    map={IMPORTANCE_MAP}
+                    iconName="priority-0"
+                    value={todo.importance}
+                    readonly
+                  />
+                )}
+
+                {todo.urgency && (
+                  <IconSelector
+                    map={URGENCY_MAP}
+                    iconName="urgency"
+                    value={todo.urgency}
+                    readonly
+                  />
+                )}
+
                 {!isToday(todo.planDate) && (
                   <Text type="error">
                     {todo.planDate}{' '}
@@ -64,7 +87,7 @@ export function TodoList({ todoList }: { todoList: Todo[] }) {
                     )}
                   </Text>
                 )}
-                {todo.tags.length > 0 && (
+                {todo.tags?.length > 0 && (
                   <div className="flex flex-wrap gap-1">
                     {todo.tags.map((tag, index) => (
                       <Tag key={index} color="arcoblue">
@@ -76,7 +99,7 @@ export function TodoList({ todoList }: { todoList: Todo[] }) {
               </div>
             </FlexibleContainer.Shrink>
             <FlexibleContainer.Fixed>
-              <div className="h-7 flex items-center">
+              <div className="h-8 flex items-center">
                 <Popover
                   trigger="click"
                   content={
@@ -96,9 +119,16 @@ export function TodoList({ todoList }: { todoList: Todo[] }) {
                     </div>
                   }
                 >
-                  <svg width={16} height={16}>
-                    <use href={`/public/icons.svg#more-for-task`} />
-                  </svg>
+                  <Button
+                    iconOnly
+                    type="text"
+                    size="mini"
+                    icon={
+                      <svg width={16} height={16} className="m-auto">
+                        <use href={`/public/icons.svg#more-for-task`} />
+                      </svg>
+                    }
+                  />
                 </Popover>
               </div>
             </FlexibleContainer.Fixed>

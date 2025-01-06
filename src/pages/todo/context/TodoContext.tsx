@@ -9,56 +9,27 @@ import {
   SetStateAction,
 } from 'react';
 import { Todo, TodoFilters } from '../types';
-import dayjs from 'dayjs';
+
 interface TodoContextType {
   todoList: Todo[];
   filters: TodoFilters;
+  currentTodo: Todo | null;
+  setCurrentTodo: Dispatch<SetStateAction<Todo | null>>;
   setFilters: Dispatch<SetStateAction<TodoFilters>>;
+  getTodoList: () => void;
   addTodo: (todo: Omit<Todo, 'id' | 'completed' | 'createdAt'>) => void;
   updateTodo: (id: string, todo: Partial<Todo>) => void;
   toggleTodo: (id: string) => void;
   deleteTodo: (id: string) => void;
   abandonTodo: (id: string) => void;
+  showTodoDetail: (id: string) => void;
 }
 
 const TodoContext = createContext<TodoContextType | undefined>(undefined);
 
 export function TodoProvider({ children }: { children: React.ReactNode }) {
-  const [todoList, setTodoList] = useState<Todo[]>([
-    {
-      id: '1',
-      name: 'test',
-      completed: false,
-      createdAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-      tags: [],
-      planDate: dayjs('2025-01-01').format('YYYY-MM-DD'),
-      planStartAt: '10:00:00',
-      planEndAt: '12:00:00',
-      description: 'test',
-    },
-    {
-      id: '2',
-      name: 'test',
-      completed: false,
-      createdAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-      tags: [],
-      planDate: dayjs('2025-01-01').format('YYYY-MM-DD'),
-      planStartAt: '11:00:00',
-      planEndAt: '12:00:00',
-      description: 'test',
-    },
-    {
-      id: '3',
-      name: 'test',
-      completed: false,
-      createdAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-      tags: [],
-      planDate: dayjs().format('YYYY-MM-DD'),
-      planStartAt: '11:00:00',
-      planEndAt: '12:00:00',
-      description: 'test',
-    },
-  ]);
+  const [todoList, setTodoList] = useState<Todo[]>([]);
+  const [currentTodo, setCurrentTodo] = useState<Todo | null>(null);
   const [filters, setFilters] = useState<TodoFilters>({
     search: '',
     importance: 'all',
@@ -67,57 +38,88 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     tags: [],
   });
 
-  const addTodo = useCallback((todo: Omit<Todo, 'id' | 'completed'>) => {
-    setTodoList((prev) => [
-      ...prev,
-      {
-        id: Math.random().toString(36).substring(7),
-        completed: false,
-        createdAt: new Date().toISOString(),
-        ...todo,
-      },
-    ]);
-  }, []);
+  function getTodoList() {
+    const todoList = JSON.parse(localStorage.getItem('todoList') || '[]');
+    setTodoList(todoList);
+  }
 
-  const updateTodo = useCallback((id: string, todo: Partial<Todo>) => {
-    setTodoList((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, ...todo } : t))
+  function addTodo(todo: Omit<Todo, 'id' | 'completed'>) {
+    const newTodo = {
+      id: Math.random().toString(36).substring(7),
+      completed: false,
+      createdAt: new Date().toISOString(),
+      ...todo,
+    };
+    localStorage.setItem('todoList', JSON.stringify([...todoList, newTodo]));
+    getTodoList();
+  }
+
+  function updateTodo(id: string, todo: Partial<Todo>) {
+    localStorage.setItem(
+      'todoList',
+      JSON.stringify(todoList.map((t) => (t.id === id ? { ...t, ...todo } : t)))
     );
-  }, []);
+    getTodoList();
+  }
 
-  const toggleTodo = useCallback((id: string) => {
-    setTodoList((prev) =>
-      prev.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+  function toggleTodo(id: string) {
+    localStorage.setItem(
+      'todoList',
+      JSON.stringify(
+        todoList.map((todo) =>
+          todo.id === id ? { ...todo, completed: !todo.completed } : todo
+        )
       )
     );
-  }, []);
+    getTodoList();
+  }
 
-  const deleteTodo = useCallback((id: string) => {
-    setTodoList((prev) => prev.filter((todo) => todo.id !== id));
-  }, []);
+  function deleteTodo(id: string) {
+    localStorage.setItem(
+      'todoList',
+      JSON.stringify(todoList.filter((todo) => todo.id !== id))
+    );
+    getTodoList();
+  }
 
-  const abandonTodo = useCallback((id: string) => {
-    setTodoList((prev) =>
-      prev.map((todo) =>
-        todo.id === id
-          ? { ...todo, abandoned: true, abandonedAt: new Date().toISOString() }
-          : todo
+  function abandonTodo(id: string) {
+    localStorage.setItem(
+      'todoList',
+      JSON.stringify(
+        todoList.map((todo) =>
+          todo.id === id
+            ? {
+                ...todo,
+                abandoned: true,
+                abandonedAt: new Date().toISOString(),
+              }
+            : todo
+        )
       )
     );
-  }, []);
+    getTodoList();
+  }
+
+  function showTodoDetail(id: string) {
+    const todo = todoList.find((todo) => todo.id === id);
+    setCurrentTodo(todo);
+  }
 
   return (
     <TodoContext.Provider
       value={{
         todoList,
         filters,
+        currentTodo,
+        setCurrentTodo,
         setFilters,
+        getTodoList,
         addTodo,
         toggleTodo,
         deleteTodo,
         abandonTodo,
         updateTodo,
+        showTodoDetail,
       }}
     >
       {children}

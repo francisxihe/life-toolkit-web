@@ -2,7 +2,7 @@
 
 import { TodoFilters } from './TodoFilters';
 import { TodoList } from '../components/TodoList';
-import { TodoForm } from '../components/TodoForm/TodoForm';
+import { TodoForm } from '../components/TodoForm';
 import { TodoStats } from './TodoStats';
 
 export default function TodoPage() {

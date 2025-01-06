@@ -61,7 +61,6 @@ export const URGENCY_MAP = new Map([
 ]);
 
 export const RECURRENCE_PATTERNS = {
-  none: '不重复',
   daily: '每日',
   weekly: '每周',
   monthly: '每月',
