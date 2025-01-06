@@ -16,7 +16,7 @@ import { isToday } from 'date-fns';
 import FlexibleContainer from '@/components/FlexibleContainer';
 import { URGENCY_MAP, IMPORTANCE_MAP } from '../../constants';
 import IconSelector from '../IconSelector';
-import styles from './style.module.less';
+import CheckDone from '../CheckDone';
 
 const { Text, Paragraph } = Typography;
 
@@ -28,19 +28,15 @@ export function TodoList({ todoList }: { todoList: Todo[] }) {
     <div className="w-full mt-[-8px]">
       {todoList.map((todo) => (
         <div
-          className={'w-full border-b px-4 py-2 bg-background'}
+          className={'w-full border-b pl-4 py-2 bg-background'}
           key={todo.id}
         >
-          <FlexibleContainer direction="vertical" className="gap-2 items-start">
+          <FlexibleContainer direction="vertical" className="items-start">
             <FlexibleContainer.Fixed className="flex items-start ">
-              <div
-                className={`h-8 flex items-center ${styles['custom-checkbox-wrapper']}`}
-              >
-                <Checkbox
-                  checked={todo.completed}
-                  onChange={() => toggleTodo(todo.id)}
-                />
-              </div>
+              <CheckDone
+                checked={todo.completed}
+                onChange={() => toggleTodo(todo.id)}
+              />
             </FlexibleContainer.Fixed>
             <FlexibleContainer.Shrink
               onClick={() => showTodoDetail(todo.id)}
