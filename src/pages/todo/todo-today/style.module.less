@@ -14,7 +14,11 @@
   }
 }
 
-.custom-checkbox {
+.custom-checkbox-wrapper {
+  :global(.arco-checkbox-checked .arco-checkbox-mask) {
+    background-color: var(--color-fill-2) !important;
+  }
+
   :global(.arco-checkbox-mask) {
     width: 18px;
     height: 18px;

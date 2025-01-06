@@ -1,14 +1,50 @@
-export const IMPORTANCE_LEVELS = {
-  low: '低',
-  medium: '中',
-  high: '高',
-} as const;
+export const IMPORTANCE_MAP = new Map([
+  [
+    1,
+    {
+      color: 'danger',
+      label: '非常重要',
+    },
+  ],
+  [
+    2,
+    {
+      color: 'warning',
+      label: '重要',
+    },
+  ],
+  [
+    3,
+    {
+      color: 'success',
+      label: '一般',
+    },
+  ],
+]);
 
-export const URGENCY_LEVELS = {
-  low: '低',
-  medium: '中',
-  high: '高',
-} as const;
+export const URGENCY_MAP = new Map([
+  [
+    1,
+    {
+      color: 'danger',
+      label: '非常紧急',
+    },
+  ],
+  [
+    2,
+    {
+      color: 'warning',
+      label: '紧急',
+    },
+  ],
+  [
+    3,
+    {
+      color: 'success',
+      label: '一般',
+    },
+  ],
+]);
 
 export const RECURRENCE_PATTERNS = {
   none: '不重复',

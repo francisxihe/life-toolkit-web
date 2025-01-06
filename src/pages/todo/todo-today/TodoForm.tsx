@@ -10,18 +10,10 @@ import {
 import { IconDown } from '@arco-design/web-react/icon';
 import * as z from 'zod';
 import { useTodoContext } from '../context/TodoContext';
-import {
-  IMPORTANCE_LEVELS,
-  URGENCY_LEVELS,
-  RECURRENCE_PATTERNS,
-} from '../constants';
-import { useState } from 'react';
-
-const Icon = ({ id, width = 16, height = 16 }) => (
-  <svg width={width} height={height}>
-    <use href={`/public/icons.svg#${id}`} />
-  </svg>
-);
+import { IMPORTANCE_MAP, URGENCY_MAP, RECURRENCE_PATTERNS } from '../constants';
+import { useState, MouseEventHandler } from 'react';
+import CustomIcon from '@/components/Icon';
+import IconSelector from '../components/IconSelector';
 
 const FormItem = Form.Item;
 const TextArea = Input.TextArea;
@@ -31,8 +23,8 @@ const todoSchema = z.object({
   task: z.string().default(''),
   description: z.string().default(''),
   tags: z.array(z.string()).default([]),
-  importance: z.enum(['low', 'medium', 'high']).default('medium'),
-  urgency: z.enum(['low', 'medium', 'high']).default('medium'),
+  importance: z.number().default(2),
+  urgency: z.number().default(2),
   planDate: z.string().default(''),
   planTimeRange: z.tuple([z.string(), z.string()]).default(['', '']),
   recurring: z
@@ -52,8 +44,8 @@ export function TodoForm() {
 
     addTodo({
       task: values.task,
-      importance: values.importance as 'low' | 'medium' | 'high',
-      urgency: values.urgency as 'low' | 'medium' | 'high',
+      importance: values.importance,
+      urgency: values.urgency,
       planDate: values.planDate || undefined,
       planStartAt: values.planTimeRange[0] || undefined,
       planEndAt: values.planTimeRange[1] || undefined,
@@ -96,7 +88,6 @@ export function TodoForm() {
                   <FormItem label="起止时间" field={'planTimeRange'}>
                     <RangePicker showTime className="w-full rounded-md" />
                   </FormItem>
-
                   <FormItem label="重复" field="recurring">
                     <Select placeholder="选择重复模式" className="rounded-md">
                       {Object.entries(RECURRENCE_PATTERNS).map(
@@ -112,7 +103,12 @@ export function TodoForm() {
               }
             >
               <div className="px-3 py-1.5 my-1.5 rounded-sm hover:bg-fill-3 flex items-center gap-2 cursor-pointer">
-                <Icon width={16} height={16} id="today-icon-27" />
+                <CustomIcon
+                  width={16}
+                  height={16}
+                  id="today-icon-27"
+                  className="text-text-2"
+                />
                 今天
               </div>
             </Popover>
@@ -124,31 +120,23 @@ export function TodoForm() {
                     className="rounded-md min-h-[120px] resize-y"
                   />
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <FormItem label="重要程度" field="importance">
-                      <Select placeholder="选择重要程度" className="rounded-md">
-                        {Object.entries(IMPORTANCE_LEVELS).map(
-                          ([value, label]) => (
-                            <Select.Option key={value} value={value}>
-                              {label}
-                            </Select.Option>
-                          )
-                        )}
-                      </Select>
-                    </FormItem>
+                  <IconSelector
+                    map={IMPORTANCE_MAP}
+                    icon="priority-1"
+                    value={formData.importance}
+                    onChange={(value) => {
+                      setFormData((prev) => ({ ...prev, importance: value }));
+                    }}
+                  />
 
-                    <FormItem label="紧急程度" field="urgency">
-                      <Select placeholder="选择紧急程度" className="rounded-md">
-                        {Object.entries(URGENCY_LEVELS).map(
-                          ([value, label]) => (
-                            <Select.Option key={value} value={value}>
-                              {label}
-                            </Select.Option>
-                          )
-                        )}
-                      </Select>
-                    </FormItem>
-                  </div>
+                  <IconSelector
+                    map={URGENCY_MAP}
+                    icon="urgency"
+                    value={formData.urgency}
+                    onChange={(value) => {
+                      setFormData((prev) => ({ ...prev, urgency: value }));
+                    }}
+                  />
 
                   <Select
                     mode="multiple"

@@ -2,7 +2,7 @@ import styles from './style.module.less';
 
 export function Container(props: {
   direction?: 'vertical' | 'horizontal';
-  className: string;
+  className?: string;
   children: React.ReactNode;
 }) {
   const { direction = 'horizontal', className, children } = props;
@@ -20,7 +20,7 @@ export function Container(props: {
 }
 
 export function ContainerFixed(props: {
-  className: string;
+  className?: string;
   children: React.ReactNode;
 }) {
   const { className, children } = props;
@@ -34,7 +34,7 @@ export function ContainerFixed(props: {
 }
 
 export function ContainerShrink(props: {
-  className: string;
+  className?: string;
   children: React.ReactNode;
 }) {
   const { className, children } = props;

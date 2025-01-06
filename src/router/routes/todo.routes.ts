@@ -7,8 +7,8 @@ export const todoRoutes: IRoute = {
   children: [
     {
       name: 'menu.todo.today',
-      key: 'TodoToday',
-      breadcrumb: true, 
+      key: 'todo-today',
+      breadcrumb: true,
     },
     {
       name: 'menu.todo.list',
@@ -22,4 +22,3 @@ export const todoRoutes: IRoute = {
     },
   ],
 };
-

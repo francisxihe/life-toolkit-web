@@ -10,11 +10,7 @@ import {
 } from '@arco-design/web-react';
 import * as z from 'zod';
 import { useTodoContext } from '../context/TodoContext';
-import {
-  IMPORTANCE_LEVELS,
-  URGENCY_LEVELS,
-  RECURRENCE_PATTERNS,
-} from '../constants';
+import { IMPORTANCE_MAP, URGENCY_MAP, RECURRENCE_PATTERNS } from '../constants';
 
 const FormItem = Form.Item;
 const TextArea = Input.TextArea;
@@ -91,7 +87,7 @@ export function TodoForm() {
       <div className="grid grid-cols-2 gap-4">
         <FormItem label="重要程度" field="importance">
           <Select placeholder="选择重要程度" className="rounded-md">
-            {Object.entries(IMPORTANCE_LEVELS).map(([value, label]) => (
+            {Object.entries(IMPORTANCE_MAP).map(([value, label]) => (
               <Select.Option key={value} value={value}>
                 {label}
               </Select.Option>
@@ -101,7 +97,7 @@ export function TodoForm() {
 
         <FormItem label="紧急程度" field="urgency">
           <Select placeholder="选择紧急程度" className="rounded-md">
-            {Object.entries(URGENCY_LEVELS).map(([value, label]) => (
+            {Object.entries(URGENCY_MAP).map(([value, label]) => (
               <Select.Option key={value} value={value}>
                 {label}
               </Select.Option>

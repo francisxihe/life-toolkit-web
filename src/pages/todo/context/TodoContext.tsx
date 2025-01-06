@@ -15,6 +15,7 @@ interface TodoContextType {
   filters: TodoFilters;
   setFilters: Dispatch<SetStateAction<TodoFilters>>;
   addTodo: (todo: Omit<Todo, 'id' | 'completed' | 'createdAt'>) => void;
+  updateTodo: (id: string, todo: Partial<Todo>) => void;
   toggleTodo: (id: string) => void;
   deleteTodo: (id: string) => void;
   abandonTodo: (id: string) => void;
@@ -33,6 +34,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       planDate: dayjs('2025-01-01').format('YYYY-MM-DD'),
       planStartAt: '10:00:00',
       planEndAt: '12:00:00',
+      description: 'test',
     },
     {
       id: '2',
@@ -43,6 +45,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       planDate: dayjs('2025-01-01').format('YYYY-MM-DD'),
       planStartAt: '11:00:00',
       planEndAt: '12:00:00',
+      description: 'test',
     },
     {
       id: '3',
@@ -53,6 +56,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
       planDate: dayjs().format('YYYY-MM-DD'),
       planStartAt: '11:00:00',
       planEndAt: '12:00:00',
+      description: 'test',
     },
   ]);
   const [filters, setFilters] = useState<TodoFilters>({
@@ -73,6 +77,12 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
         ...todo,
       },
     ]);
+  }, []);
+
+  const updateTodo = useCallback((id: string, todo: Partial<Todo>) => {
+    setTodoList((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, ...todo } : t))
+    );
   }, []);
 
   const toggleTodo = useCallback((id: string) => {
@@ -107,6 +117,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
         toggleTodo,
         deleteTodo,
         abandonTodo,
+        updateTodo,
       }}
     >
       {children}

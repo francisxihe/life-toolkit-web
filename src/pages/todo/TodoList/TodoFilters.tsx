@@ -4,7 +4,7 @@ import { useCallback } from 'react';
 import { Input, Select, Button, Space, Grid } from '@arco-design/web-react';
 import { IconSearch } from '@arco-design/web-react/icon';
 import { useTodoContext } from '../context/TodoContext';
-import { IMPORTANCE_LEVELS, URGENCY_LEVELS } from '../constants';
+import { IMPORTANCE_MAP, URGENCY_MAP } from '../constants';
 import { TagInput } from '../components/tag-input';
 import type { TodoFilters } from '../types';
 
@@ -80,7 +80,7 @@ export function TodoFilters() {
             style={{ width: 180 }}
           >
             <Select.Option value="all">All Importance</Select.Option>
-            {Object.entries(IMPORTANCE_LEVELS).map(([value, label]) => (
+            {Object.entries(IMPORTANCE_MAP).map(([value, label]) => (
               <Select.Option key={value} value={value}>
                 {label}
               </Select.Option>
@@ -94,7 +94,7 @@ export function TodoFilters() {
             style={{ width: 180 }}
           >
             <Select.Option value="all">All Urgency</Select.Option>
-            {Object.entries(URGENCY_LEVELS).map(([value, label]) => (
+            {Object.entries(URGENCY_MAP).map(([value, label]) => (
               <Select.Option key={value} value={value}>
                 {label}
               </Select.Option>

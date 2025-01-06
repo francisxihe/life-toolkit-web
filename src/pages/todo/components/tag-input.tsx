@@ -40,7 +40,7 @@ export function TagInput({ value, onChange, placeholder }: TagInputProps) {
 
   return (
     <div
-      className="flex flex-wrap gap-2 p-2 border rounded-md bg-background"
+      className="flex flex-wrap gap-2 p-2 border rounded-md bg-background-1"
       onClick={() => inputRef.current?.focus()}
     >
       {value.map((tag, index) => (

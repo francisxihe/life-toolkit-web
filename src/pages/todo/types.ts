@@ -29,9 +29,9 @@ export interface Todo {
   /** 待办描述 */
   description?: string;
   /** 待办重要程度 */
-  importance?: 'low' | 'medium' | 'high';
+  importance?: number;
   /** 待办紧急程度 */
-  urgency?: 'high' | 'medium' | 'low';
+  urgency?: number;
   /** 待办标签 */
   tags: string[];
   /** 待办是否完成 */
