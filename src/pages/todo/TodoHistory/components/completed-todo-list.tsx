@@ -21,7 +21,7 @@ export function CompletedTodoList({ todos }: CompletedTodoListProps) {
           <div className="flex justify-between items-start">
             <div>
               <p className="line-through text-muted-foreground font-medium">
-                {todo.task}
+                {todo.name}
               </p>
               {todo.description && (
                 <p className="text-sm line-through text-muted-foreground mt-1">

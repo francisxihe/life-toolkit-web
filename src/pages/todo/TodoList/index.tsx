@@ -1,8 +1,8 @@
 'use client';
 
 import { TodoFilters } from './TodoFilters';
-import { TodoList } from './TodoList';
-import { TodoForm } from './TodoForm';
+import { TodoList } from '../components/TodoList';
+import { TodoForm } from '../components/TodoForm/TodoForm';
 import { TodoStats } from './TodoStats';
 
 export default function TodoPage() {
@@ -15,7 +15,7 @@ export default function TodoPage() {
       <TodoStats />
       <TodoFilters />
       <TodoForm />
-      <TodoList />
+      <TodoList todoList={[]} />
     </div>
   );
 }

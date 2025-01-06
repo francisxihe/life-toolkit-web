@@ -27,7 +27,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   const [todoList, setTodoList] = useState<Todo[]>([
     {
       id: '1',
-      task: 'test',
+      name: 'test',
       completed: false,
       createdAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       tags: [],
@@ -38,7 +38,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     },
     {
       id: '2',
-      task: 'test',
+      name: 'test',
       completed: false,
       createdAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       tags: [],
@@ -49,7 +49,7 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     },
     {
       id: '3',
-      task: 'test',
+      name: 'test',
       completed: false,
       createdAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       tags: [],

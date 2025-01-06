@@ -22,6 +22,7 @@ const config: Config = {
           1: 'var(--color-text-1)',
           2: 'var(--color-text-2)',
           3: 'var(--color-text-3)',
+          4: 'var(--color-text-4)',
         },
         fill: {
           DEFAULT: 'var(--color-fill-1)',
@@ -104,6 +105,9 @@ const config: Config = {
         'body-2': '13px',
         'body-3': '14px',
         caption: '12px',
+        'title-1': '16px',
+        'title-2': '20px',
+        'title-3': '24px',
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -126,7 +130,7 @@ const config: Config = {
       },
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  // plugins: [require('tailwindcss-animate')],
 };
 
 export default config;

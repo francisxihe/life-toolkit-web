@@ -9,10 +9,10 @@ export interface TodoFilters {
 }
 
 export const todoSchema = z.object({
-  task: z.string().min(1, { message: 'Task cannot be empty' }),
+  name: z.string().min(1, { message: 'Task cannot be empty' }),
   description: z.string().optional(),
-  importance: z.enum(['low', 'medium', 'high']),
-  urgency: z.enum(['low', 'medium', 'high']),
+  importance: z.number().min(0).max(3),
+  urgency: z.number().min(0).max(3),
   startDateTime: z.string(),
   endDateTime: z.string(),
   recurring: z.string(),
@@ -25,7 +25,7 @@ export type TodoFormData = z.infer<typeof todoSchema>;
 export interface Todo {
   id: string;
   /** 待办名称 */
-  task: string;
+  name: string;
   /** 待办描述 */
   description?: string;
   /** 待办重要程度 */

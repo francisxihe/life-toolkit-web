@@ -5,19 +5,21 @@ export default function CustomIcon({
   width = 16,
   height = 16,
   className,
+  style,
   onClick,
 }: {
   id: string;
   width?: number;
   height?: number;
   className?: string;
-} & React.DOMAttributes<SVGSVGElement>) {
+} & React.SVGAttributes<SVGSVGElement>) {
   return (
     <svg
       width={width}
       height={height}
       className={`${className} fill-[currentColor]`}
       onClick={onClick}
+      style={style}
     >
       <use href={`/public/icons.svg#${id}`} />
     </svg>

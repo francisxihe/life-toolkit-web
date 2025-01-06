@@ -1,43 +1,38 @@
 import CustomIcon from '@/components/Icon';
 
-export default function IconSelector({
-  map,
-  icon,
-  value,
-  onChange,
-}: {
+export default function IconSelector(props: {
   map: Map<number, { color: string; label: string }>;
   icon: string;
-  value: number;
-  onChange: (value: number) => void;
+  value: number | null;
+  onChange: (value: number | null) => void;
 }) {
+  const { map, icon, value, onChange } = props;
+
   return (
-    <div className="flex items-center gap-2">
+    <div className="py-1">
       {[...Array.from(map.entries())].map(([key, value], index) => {
         const { color, label } = value;
         return (
-          <CustomIcon
+          <div
             key={index}
-            width={16}
-            height={16}
-            id={icon}
-            className={`text-${color} cursor-pointer`}
+            className="px-3 py-1 flex items-center gap-2 cursor-pointer"
             onClick={() => {
               onChange(key);
             }}
-          />
+          >
+            <CustomIcon
+              width={16}
+              height={16}
+              id={icon}
+              className={`cursor-pointer`}
+              style={{
+                color: `rgb(var(--${color}-6))`,
+              }}
+            />
+            <div className="text-body-3">{label}</div>
+          </div>
         );
       })}
-
-      <CustomIcon
-        width={16}
-        height={16}
-        id={icon}
-        className={`text-info cursor-pointer`}
-        onClick={() => {
-          onChange(undefined);
-        }}
-      />
     </div>
   );
 }

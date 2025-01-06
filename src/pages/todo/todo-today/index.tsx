@@ -1,5 +1,5 @@
-import { TodoList } from './TodoList';
-import { TodoForm } from './TodoForm';
+import { TodoList } from '../components/TodoList';
+import { TodoForm } from '../components/TodoForm/TodoForm';
 import { useTodoContext } from '../context/TodoContext';
 import { useMemo } from 'react';
 import dayjs from 'dayjs';
@@ -31,11 +31,11 @@ export default function TodoPage() {
 
   return (
     <FlexibleContainer className="bg-background-2 rounded-lg w-full h-full">
-      <FlexibleContainer.Fixed className="px-4 py-2 flex justify-between items-center border-b">
-        <div className="text-text-1 text-2xl font-bold py-3">今日代办</div>
+      <FlexibleContainer.Fixed className="px-5 py-2 flex justify-between items-center border-b">
+        <div className="text-text-1 text-title-3 font-bold py-1">今日待办</div>
       </FlexibleContainer.Fixed>
 
-      <FlexibleContainer.Shrink className="px-4 py-2 w-full h-full">
+      <FlexibleContainer.Shrink className="px-5 py-2 w-full h-full">
         <TodoForm />
 
         <Collapse
