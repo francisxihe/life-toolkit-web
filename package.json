@@ -2,6 +2,7 @@
   "name": "arco-design-pro",
   "version": "1.0.0",
   "description": "Arco Design Pro",
+  "homepage": "https://francisxihe.github.io/life-toolkit",
   "scripts": {
     "start": "vite",
     "dev": "vite",
@@ -10,7 +11,8 @@
     "eslint": "eslint src/ --ext .ts,.tsx,.js,.jsx --fix --cache",
     "stylelint": "stylelint 'src/**/*.less' 'src/**/*.css' --fix --cache",
     "pre-commit": "pretty-quick --staged && npm run eslint && npm run stylelint",
-    "prepare": "husky install && husky add .husky/pre-commit 'npm run pre-commit'"
+    "prepare": "husky install && husky add .husky/pre-commit 'npm run pre-commit'",
+    "deploy": "gh-pages -d dist -b main -r git@github.com:francisxihe/life-toolkit.git --no-history"
   },
   "dependencies": {
     "@antv/data-set": "^0.11.8",
@@ -28,6 +30,7 @@
     "dayjs": "^1.11.13",
     "echarts": "^5.5.1",
     "echarts-for-react": "^3.0.2",
+    "gh-pages": "^6.3.0",
     "lodash": "^4.17.21",
     "lucide-react": "^0.460.0",
     "mockjs": "^1.1.0",
@@ -46,6 +49,7 @@
     "@arco-design/webpack-plugin": "^1.6.0",
     "@arco-plugins/vite-plugin-svgr": "^0.7.2",
     "@svgr/webpack": "^5.5.0",
+    "@types/node": "^22.10.5",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
@@ -72,7 +76,8 @@
     "tailwindcss": "3.3.3",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^4.5.2",
-    "vite": "^2.6.14"
+    "vite": "^2.6.14",
+    "vite-plugin-html": "^3.2.2"
   },
   "browserslist": {
     "production": [

@@ -17,6 +17,7 @@ import FlexibleContainer from '@/components/FlexibleContainer';
 import { URGENCY_MAP, IMPORTANCE_MAP } from '../../constants';
 import IconSelector from '../IconSelector';
 import CheckDone from '../CheckDone';
+import CustomIcon from '@/components/Icon';
 
 const { Text, Paragraph } = Typography;
 
@@ -119,11 +120,7 @@ export function TodoList({ todoList }: { todoList: Todo[] }) {
                     iconOnly
                     type="text"
                     size="mini"
-                    icon={
-                      <svg width={16} height={16} className="m-auto">
-                        <use href={`/public/icons.svg#more-for-task`} />
-                      </svg>
-                    }
+                    icon={<CustomIcon id="more-for-task" />}
                   />
                 </Popover>
               </div>

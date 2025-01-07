@@ -49,7 +49,7 @@ function Navbar({ show }: { show: boolean }) {
 
   function logout() {
     setUserStatus('logout');
-    window.location.href = '/login';
+    window.location.href = `${import.meta.env.VITE_APP_BASE_PATH}/login`;
   }
 
   function onMenuItemClick(key) {

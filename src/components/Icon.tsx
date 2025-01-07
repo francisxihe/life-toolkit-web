@@ -21,7 +21,7 @@ export default function CustomIcon({
       onClick={onClick}
       style={style}
     >
-      <use href={`/public/icons.svg#${id}`} />
+      <use href={`${import.meta.env.VITE_APP_BASE_PATH}/icons.svg#${id}`} />
     </svg>
   );
 }
