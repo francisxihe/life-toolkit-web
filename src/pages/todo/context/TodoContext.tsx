@@ -12,10 +12,8 @@ import { Todo, TodoFilters } from '../types';
 
 interface TodoContextType {
   todoList: Todo[];
-  filters: TodoFilters;
   currentTodo: Todo | null;
   setCurrentTodo: Dispatch<SetStateAction<Todo | null>>;
-  setFilters: Dispatch<SetStateAction<TodoFilters>>;
   getTodoList: () => void;
   addTodo: (todo: Omit<Todo, 'id' | 'completed' | 'createdAt'>) => void;
   updateTodo: (id: string, todo: Partial<Todo>) => void;
@@ -30,13 +28,6 @@ const TodoContext = createContext<TodoContextType | undefined>(undefined);
 export function TodoProvider({ children }: { children: React.ReactNode }) {
   const [todoList, setTodoList] = useState<Todo[]>([]);
   const [currentTodo, setCurrentTodo] = useState<Todo | null>(null);
-  const [filters, setFilters] = useState<TodoFilters>({
-    search: '',
-    importance: 'all',
-    urgency: 'all',
-    status: 'all',
-    tags: [],
-  });
 
   function getTodoList() {
     const todoList = JSON.parse(localStorage.getItem('todoList') || '[]');
@@ -109,10 +100,8 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     <TodoContext.Provider
       value={{
         todoList,
-        filters,
         currentTodo,
         setCurrentTodo,
-        setFilters,
         getTodoList,
         addTodo,
         toggleTodo,

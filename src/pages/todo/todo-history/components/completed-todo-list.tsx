@@ -30,7 +30,7 @@ export function CompletedTodoList({ todos }: CompletedTodoListProps) {
               )}
             </div>
             <Tag color="arcoblue">
-              {getPriorityQuadrant(todo.importance, todo.urgency)}
+              {/* {getPriorityQuadrant(todo.importance, todo.urgency)} */}
             </Tag>
           </div>
 
@@ -43,7 +43,7 @@ export function CompletedTodoList({ todos }: CompletedTodoListProps) {
           </div>
 
           <div className="flex gap-4 text-sm text-muted-foreground mt-2">
-            <span>Created: {format(new Date(todo.startDateTime), 'PPp')}</span>
+            <span>Created: {format(new Date(todo.createdAt), 'PPp')}</span>
             <span>Completed: {format(new Date(todo.completedAt), 'PPp')}</span>
           </div>
         </Card>

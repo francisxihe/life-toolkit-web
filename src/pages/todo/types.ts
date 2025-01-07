@@ -2,8 +2,8 @@ import * as z from 'zod';
 
 export interface TodoFilters {
   search: string;
-  importance: string;
-  urgency: string;
+  importance: number | null;
+  urgency: number | null;
   status: string;
   tags: string[];
 }

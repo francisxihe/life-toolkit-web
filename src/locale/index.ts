@@ -60,6 +60,7 @@ const i18n = {
     'menu.todo': 'Todo',
     'menu.todo.today': 'Today Todo',
     'menu.todo.all': 'All Todo',
+    'menu.todo.history': 'History Todo',
   },
   'zh-CN': {
     'menu.dashboard': '仪表盘',
@@ -121,6 +122,7 @@ const i18n = {
     'menu.todo': '待办事项',
     'menu.todo.today': '今日待办',
     'menu.todo.all': '全部待办',
+    'menu.todo.history': '历史待办',
   },
 };
 

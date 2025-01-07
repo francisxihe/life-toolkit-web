@@ -11,13 +11,13 @@ export const todoRoutes: IRoute = {
       breadcrumb: true,
     },
     {
-      name: 'menu.todo.list',
-      key: 'TodoList',
+      name: 'menu.todo.all',
+      key: 'todo-all',
       breadcrumb: true,
     },
     {
       name: 'menu.todo.history',
-      key: 'TodoHistory',
+      key: 'todo-history',
       breadcrumb: true,
     },
   ],

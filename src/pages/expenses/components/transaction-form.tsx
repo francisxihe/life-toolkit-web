@@ -12,7 +12,7 @@ import {
 } from '@arco-design/web-react';
 import { useExpenses } from '../context/expenses-context';
 import { DEFAULT_CATEGORIES } from '../constants';
-import { TagInput } from '../../todo/components/tag-input';
+import { TagInput } from '../../todo/components/TagInput';
 import { useState } from 'react';
 
 const FormItem = Form.Item;

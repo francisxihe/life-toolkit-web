@@ -3,15 +3,21 @@
 import { useCallback } from 'react';
 import { Input, Select, Button, Space, Grid } from '@arco-design/web-react';
 import { IconSearch } from '@arco-design/web-react/icon';
-import { useTodoContext } from '../context/TodoContext';
 import { IMPORTANCE_MAP, URGENCY_MAP } from '../constants';
-import { TagInput } from '../components/tag-input';
+import { TagInput } from '../components/TagInput';
 import type { TodoFilters } from '../types';
+import { useState } from 'react';
 
 const { Row, Col } = Grid;
 
 export function TodoFilters() {
-  const { filters, setFilters } = useTodoContext();
+  const [filters, setFilters] = useState<TodoFilters>({
+    search: '',
+    importance: undefined,
+    urgency: undefined,
+    status: 'all',
+    tags: [],
+  });
 
   const handleSearchChange = useCallback(
     (value: string) => {
@@ -21,14 +27,14 @@ export function TodoFilters() {
   );
 
   const handleImportanceChange = useCallback(
-    (value: string) => {
+    (value: number | null) => {
       setFilters((prev: TodoFilters) => ({ ...prev, importance: value }));
     },
     [setFilters]
   );
 
   const handleUrgencyChange = useCallback(
-    (value: string) => {
+    (value: number | null) => {
       setFilters((prev: TodoFilters) => ({ ...prev, urgency: value }));
     },
     [setFilters]
@@ -51,8 +57,8 @@ export function TodoFilters() {
   const clearFilters = useCallback(() => {
     setFilters({
       search: '',
-      importance: 'all',
-      urgency: 'all',
+      importance: undefined,
+      urgency: undefined,
       status: 'all',
       tags: [],
     });
@@ -77,25 +83,27 @@ export function TodoFilters() {
           <Select
             value={filters.importance}
             onChange={handleImportanceChange}
-            style={{ width: 180 }}
+            allowClear
+            placeholder="All Importance"
           >
-            <Select.Option value="all">All Importance</Select.Option>
-            {Object.entries(IMPORTANCE_LEVELS).map(([value, label]) => (
-              <Select.Option key={value} value={value}>
-                {label}
-              </Select.Option>
-            ))}
+            {[...Array.from(IMPORTANCE_MAP.entries())].map(
+              ([key, { label }]) => (
+                <Select.Option key={key} value={key}>
+                  {label}
+                </Select.Option>
+              )
+            )}
           </Select>
         </Col>
         <Col span={6}>
           <Select
             value={filters.urgency}
             onChange={handleUrgencyChange}
-            style={{ width: 180 }}
+            allowClear
+            placeholder="All Urgency"
           >
-            <Select.Option value="all">All Urgency</Select.Option>
-            {Object.entries(URGENCY_LEVELS).map(([value, label]) => (
-              <Select.Option key={value} value={value}>
+            {[...Array.from(URGENCY_MAP.entries())].map(([key, { label }]) => (
+              <Select.Option key={key} value={key}>
                 {label}
               </Select.Option>
             ))}
@@ -105,28 +113,22 @@ export function TodoFilters() {
           <Select
             value={filters.status}
             onChange={handleStatusChange}
-            style={{ width: 180 }}
+            allowClear
+            placeholder="All Status"
           >
-            <Select.Option value="all">All Status</Select.Option>
             <Select.Option value="pending">Pending</Select.Option>
             <Select.Option value="completed">Completed</Select.Option>
           </Select>
         </Col>
         <Col span={6}>
-          <Button onClick={clearFilters}>Clear Filters</Button>
-        </Col>
-      </Row>
-
-      <Row align="center" gutter={8}>
-        <Col>
-          <span style={{ fontSize: 14, fontWeight: 500 }}>Filter by tags:</span>
-        </Col>
-        <Col flex="auto">
           <TagInput
             value={filters.tags}
             onChange={handleTagsChange}
             placeholder="Add tags to filter..."
           />
+        </Col>
+        <Col span={6}>
+          <Button onClick={clearFilters}>Clear Filters</Button>
         </Col>
       </Row>
     </Space>

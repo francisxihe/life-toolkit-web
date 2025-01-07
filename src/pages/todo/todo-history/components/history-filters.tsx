@@ -11,8 +11,8 @@ import { Select } from '@arco-design/web-react';
 //   PopoverContent,
 //   PopoverTrigger,
 // } from "@/components/ui/popover";
-import { TagInput } from '../../components/tag-input';
-import { IMPORTANCE_LEVELS, URGENCY_LEVELS } from '../../constants';
+import { TagInput } from '../../components/TagInput';
+import { IMPORTANCE_MAP, URGENCY_MAP } from '../../constants';
 
 interface HistoryFiltersProps {
   onFiltersChange: (filters: HistoryFilters) => void;
