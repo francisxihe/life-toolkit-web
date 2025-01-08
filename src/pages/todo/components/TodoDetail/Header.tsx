@@ -9,8 +9,7 @@ import IconSelector from '../IconSelector';
 import { IMPORTANCE_MAP, URGENCY_MAP } from '../../constants';
 
 export default function TodoDetailHeader() {
-  const { currentTodo, restoreTodo, setCurrentTodo, doneTodo } =
-    useTodoContext();
+  const { currentTodo, setCurrentTodo, loadTodoList } = useTodoContext();
 
   return (
     <FlexibleContainer

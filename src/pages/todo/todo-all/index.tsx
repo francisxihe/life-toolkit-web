@@ -2,17 +2,18 @@
 
 import { TodoFilters } from './TodoFilters';
 import { TodoList } from '../components/TodoList';
-import { Button, Table } from '@arco-design/web-react';
+import { Button, Modal, Table } from '@arco-design/web-react';
 import FlexibleContainer from '@/components/FlexibleContainer';
 import { useTodoContext } from '../context';
 import { useEffect } from 'react';
 import { URGENCY_MAP, IMPORTANCE_MAP } from '../constants';
+import TodoService from '../ApiService';
 
 export default function TodoPage() {
-  const { todoList, currentTodo, getTodoList } = useTodoContext();
+  const { todoList, loadTodoList } = useTodoContext();
 
   useEffect(() => {
-    getTodoList();
+    loadTodoList();
   }, []);
 
   const columns = [
@@ -58,7 +59,21 @@ export default function TodoPage() {
       render: (_, record) => (
         <div>
           <Button type="text">编辑</Button>
-          <Button type="text">删除</Button>
+          <Button
+            type="text"
+            onClick={() =>
+              Modal.confirm({
+                title: '确定删除吗？',
+                content: '删除后将无法恢复',
+                onOk: () => {
+                  TodoService.deleteTodo(record.id);
+                  loadTodoList();
+                },
+              })
+            }
+          >
+            删除
+          </Button>
         </div>
       ),
     },

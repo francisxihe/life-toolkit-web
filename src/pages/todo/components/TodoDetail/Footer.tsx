@@ -1,8 +1,9 @@
 import { Button } from '@arco-design/web-react';
 import { useTodoContext } from '../../context';
+import TodoService from '../../ApiService';
 
 export default function TodoDetailFooter() {
-  const { currentTodo, updateTodo, setCurrentTodo } = useTodoContext();
+  const { currentTodo, setCurrentTodo, loadTodoList } = useTodoContext();
 
   return (
     <div className="flex justify-end items-center gap-2 border-t pt-2">
@@ -19,9 +20,10 @@ export default function TodoDetailFooter() {
         type="primary"
         className="!rounded-sm"
         onClick={() => {
-          updateTodo(currentTodo.id, {
+          TodoService.updateTodo(currentTodo.id, {
             ...currentTodo,
           });
+          loadTodoList();
           setCurrentTodo(null);
         }}
       >

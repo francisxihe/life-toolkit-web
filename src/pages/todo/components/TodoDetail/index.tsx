@@ -6,8 +6,7 @@ import FlexibleContainer from '@/components/FlexibleContainer';
 const TextArea = Input.TextArea;
 
 export default function TodoDetail() {
-  const { currentTodo, updateTodo, setCurrentTodo, restoreTodo } =
-    useTodoContext();
+  const { currentTodo, setCurrentTodo, loadTodoList } = useTodoContext();
 
   return (
     <FlexibleContainer>

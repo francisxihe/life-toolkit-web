@@ -18,11 +18,11 @@ import { URGENCY_MAP, IMPORTANCE_MAP } from '../../constants';
 import IconSelector from '../IconSelector';
 import DoneTodoCheckbox from '../DoneTodoCheckbox';
 import CustomIcon from '@/components/Icon';
-
+import TodoService from '../../ApiService';
 const { Text, Paragraph } = Typography;
 
 export function TodoList({ todoList }: { todoList: Todo[] }) {
-  const { deleteTodo, abandonTodo, showTodoDetail } = useTodoContext();
+  const { showTodoDetail, loadTodoList } = useTodoContext();
 
   return (
     <div className="w-full mt-[-8px]">
@@ -100,13 +100,19 @@ export function TodoList({ todoList }: { todoList: Todo[] }) {
                     <div className="w-40">
                       <div
                         className="cursor-pointer px-3 h-9 leading-9 hover:bg-fill-2"
-                        onClick={() => abandonTodo(todo.id)}
+                        onClick={() => {
+                          TodoService.abandonTodo(todo.id);
+                          loadTodoList();
+                        }}
                       >
                         放弃
                       </div>
                       <div
                         className="cursor-pointer px-3 h-9 leading-9 hover:bg-fill-2"
-                        onClick={() => deleteTodo(todo.id)}
+                        onClick={() => {
+                          TodoService.deleteTodo(todo.id);
+                          loadTodoList();
+                        }}
                       >
                         删除
                       </div>

@@ -1,10 +1,11 @@
 import { Checkbox } from '@arco-design/web-react';
 import styles from './style.module.less';
 import { Todo } from '../../types';
+import TodoService from '../../ApiService';
 import { useTodoContext } from '../../context';
 
 export default function DoneTodoCheckbox(props: { todo: Todo }) {
-  const { restoreTodo, doneTodo } = useTodoContext();
+  const { loadTodoList } = useTodoContext();
 
   return (
     <div
@@ -14,10 +15,11 @@ export default function DoneTodoCheckbox(props: { todo: Todo }) {
         checked={props.todo.status === 'done'}
         onChange={() => {
           if (props.todo.status === 'todo') {
-            doneTodo(props.todo.id);
+            TodoService.doneTodo(props.todo.id);
           } else {
-            restoreTodo(props.todo.id);
+            TodoService.restoreTodo(props.todo.id);
           }
+          loadTodoList();
         }}
       />
     </div>

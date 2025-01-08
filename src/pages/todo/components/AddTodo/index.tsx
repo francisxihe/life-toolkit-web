@@ -9,6 +9,7 @@ import IconSelector from '../IconSelector';
 const TextArea = Input.TextArea;
 import DateTimeTool from './DateTimeTool';
 import dayjs from 'dayjs';
+import TodoService from '../../ApiService';
 
 type TodoFormData = {
   name: string;
@@ -22,7 +23,7 @@ type TodoFormData = {
 };
 
 export default function AddTodo() {
-  const { addTodo } = useTodoContext();
+  const { loadTodoList } = useTodoContext();
   const defaultFormData = {
     name: '',
     planDate: dayjs().format('YYYY-MM-DD'),
@@ -33,7 +34,7 @@ export default function AddTodo() {
     if (!formData.name) {
       return;
     }
-    addTodo({
+    TodoService.addTodo({
       name: formData.name,
       importance: formData.importance,
       urgency: formData.urgency,
@@ -43,6 +44,7 @@ export default function AddTodo() {
       recurring: formData.recurring,
       tags: formData.tags,
     });
+    loadTodoList();
     setFormData(defaultFormData);
   };
 

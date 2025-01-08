@@ -11,7 +11,7 @@ import styles from './style.module.less';
 const today = dayjs().format('YYYY-MM-DD');
 
 export default function TodoPage() {
-  const { todoList, currentTodo, getTodoList } = useTodoContext();
+  const { todoList, currentTodo, loadTodoList } = useTodoContext();
 
   const todayDoneTodos = useMemo(() => {
     return todoList.filter(
@@ -43,7 +43,7 @@ export default function TodoPage() {
   }, [todoList]);
 
   useEffect(() => {
-    getTodoList();
+    loadTodoList();
   }, []);
 
   return (
