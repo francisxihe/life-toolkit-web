@@ -1,6 +1,6 @@
 import { TodoList } from '../components/TodoList';
-import { TodoForm } from '../components/TodoForm';
-import { useTodoContext } from '../context/TodoContext';
+import AddTodo from '../components/AddTodo';
+import { useTodoContext } from '../context';
 import { useMemo, useEffect } from 'react';
 import dayjs from 'dayjs';
 import FlexibleContainer from '@/components/FlexibleContainer';
@@ -15,31 +15,30 @@ export default function TodoPage() {
 
   const todayDoneTodos = useMemo(() => {
     return todoList.filter(
-      (todo) => todo.completed && dayjs(todo.completedAt).isSame(today, 'day')
+      (todo) =>
+        todo.status === 'done' && dayjs(todo.doneAt).isSame(today, 'day')
     );
   }, [todoList]);
 
   const todayTodos = useMemo(() => {
     return todoList.filter(
       (todo) =>
-        !todo.abandoned &&
-        !todo.completed &&
-        dayjs(todo.planDate).isSame(today, 'day')
+        todo.status === 'todo' && dayjs(todo.planDate).isSame(today, 'day')
     );
   }, [todoList]);
 
   const expiredTodos = useMemo(() => {
     return todoList.filter(
       (todo) =>
-        !todo.abandoned &&
-        !todo.completed &&
-        dayjs(todo.planDate).isBefore(today, 'day')
+        todo.status === 'todo' && dayjs(todo.planDate).isBefore(today, 'day')
     );
   }, [todoList]);
 
   const todayAbandonedTodos = useMemo(() => {
     return todoList.filter(
-      (todo) => todo.abandoned && dayjs(todo.abandonedAt).isSame(today, 'day')
+      (todo) =>
+        todo.status === 'abandoned' &&
+        dayjs(todo.abandonedAt).isSame(today, 'day')
     );
   }, [todoList]);
 
@@ -55,7 +54,7 @@ export default function TodoPage() {
 
       <FlexibleContainer.Shrink className="px-5 w-full h-full flex">
         <div className="w-full py-2">
-          <TodoForm />
+          <AddTodo />
           <Collapse
             defaultActiveKey={['expired', 'today']}
             className={`${styles['custom-collapse']} mt-2`}

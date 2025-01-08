@@ -10,20 +10,19 @@ import {
   Popover,
   Button,
 } from '@arco-design/web-react';
-import { useTodoContext } from '../../context/TodoContext';
+import { useTodoContext } from '../../context';
 import { Todo } from '../../types';
 import { isToday } from 'date-fns';
 import FlexibleContainer from '@/components/FlexibleContainer';
 import { URGENCY_MAP, IMPORTANCE_MAP } from '../../constants';
 import IconSelector from '../IconSelector';
-import CheckDone from '../CheckDone';
+import DoneTodoCheckbox from '../DoneTodoCheckbox';
 import CustomIcon from '@/components/Icon';
 
 const { Text, Paragraph } = Typography;
 
 export function TodoList({ todoList }: { todoList: Todo[] }) {
-  const { toggleTodo, deleteTodo, abandonTodo, updateTodo, showTodoDetail } =
-    useTodoContext();
+  const { deleteTodo, abandonTodo, showTodoDetail } = useTodoContext();
 
   return (
     <div className="w-full mt-[-8px]">
@@ -34,10 +33,7 @@ export function TodoList({ todoList }: { todoList: Todo[] }) {
         >
           <FlexibleContainer direction="vertical" className="items-start">
             <FlexibleContainer.Fixed className="flex items-start ">
-              <CheckDone
-                checked={todo.completed}
-                onChange={() => toggleTodo(todo.id)}
-              />
+              <DoneTodoCheckbox todo={todo} />
             </FlexibleContainer.Fixed>
             <FlexibleContainer.Shrink
               onClick={() => showTodoDetail(todo.id)}
@@ -48,7 +44,8 @@ export function TodoList({ todoList }: { todoList: Todo[] }) {
                 <Paragraph
                   className="text-body-1 !mb-0.5"
                   style={{
-                    textDecoration: todo.completed ? 'line-through' : 'none',
+                    textDecoration:
+                      todo.status === 'done' ? 'line-through' : 'none',
                     color: 'var(--color-text-3)',
                   }}
                 >

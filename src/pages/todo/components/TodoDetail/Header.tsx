@@ -2,14 +2,15 @@ import { Divider, Button } from '@arco-design/web-react';
 import { IconClose } from '@arco-design/web-react/icon';
 import dayjs from 'dayjs';
 import FlexibleContainer from '@/components/FlexibleContainer';
-import CheckDone from '../CheckDone';
-import DateTimeTool from '../TodoForm/DateTimeTool';
-import { useTodoContext } from '../../context/TodoContext';
+import DoneTodoCheckbox from '../DoneTodoCheckbox';
+import DateTimeTool from '../AddTodo/DateTimeTool';
+import { useTodoContext } from '../../context';
 import IconSelector from '../IconSelector';
 import { IMPORTANCE_MAP, URGENCY_MAP } from '../../constants';
 
 export default function TodoDetailHeader() {
-  const { currentTodo, toggleTodo, setCurrentTodo } = useTodoContext();
+  const { currentTodo, restoreTodo, setCurrentTodo, doneTodo } =
+    useTodoContext();
 
   return (
     <FlexibleContainer
@@ -17,10 +18,7 @@ export default function TodoDetailHeader() {
       className="flex items-center px-1.5 text-text-3 border-b mb-2 !h-12"
     >
       <FlexibleContainer.Shrink className="flex items-center">
-        <CheckDone
-          checked={currentTodo.completed}
-          onChange={() => toggleTodo(currentTodo.id)}
-        />
+        <DoneTodoCheckbox todo={currentTodo} />
         <Divider type="vertical" className={'!mx-1'} />
         <DateTimeTool
           formData={{

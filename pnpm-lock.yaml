@@ -91,6 +91,9 @@ importers:
       redux:
         specifier: ^4.1.2
         version: 4.2.1
+      zh-cn:
+        specifier: link:dayjs/locale/zh-cn
+        version: link:dayjs/locale/zh-cn
       zod:
         specifier: ^3.24.1
         version: 3.24.1

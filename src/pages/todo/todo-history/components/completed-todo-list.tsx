@@ -44,7 +44,7 @@ export function CompletedTodoList({ todos }: CompletedTodoListProps) {
 
           <div className="flex gap-4 text-sm text-muted-foreground mt-2">
             <span>Created: {format(new Date(todo.createdAt), 'PPp')}</span>
-            <span>Completed: {format(new Date(todo.completedAt), 'PPp')}</span>
+            <span>Completed: {format(new Date(todo.doneAt), 'PPp')}</span>
           </div>
         </Card>
       ))}

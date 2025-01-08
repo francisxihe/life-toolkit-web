@@ -34,12 +34,10 @@ export interface Todo {
   urgency?: number;
   /** 待办标签 */
   tags: string[];
-  /** 待办是否完成 */
-  completed: boolean;
   /** 待办开始时间 */
   startAt?: string;
   /** 待办完成时间 */
-  completedAt?: string;
+  doneAt?: string;
   /** 计划待办日期 */
   planDate?: string;
   /** 计划待办开始时间 */
@@ -50,8 +48,8 @@ export interface Todo {
   createdAt: string;
   /** 待办是否是重复待办 */
   recurring?: string;
-  /** 待办是否是放弃待办 */
-  abandoned?: boolean;
   /** 放弃待办时间 */
   abandonedAt?: string;
+  /** 待办状态 */
+  status: 'todo' | 'done' | 'abandoned';
 }

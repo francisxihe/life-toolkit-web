@@ -88,8 +88,6 @@ function Index() {
     setTheme,
   };
 
-  console.log(CustomIcon);
-
   return (
     <HashRouter basename={import.meta.env.VITE_APP_BASE_PATH}>
       <ConfigProvider

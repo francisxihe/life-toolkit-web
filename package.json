@@ -12,6 +12,7 @@
     "stylelint": "stylelint 'src/**/*.less' 'src/**/*.css' --fix --cache",
     "pre-commit": "pretty-quick --staged && npm run eslint && npm run stylelint",
     "prepare": "husky install && husky add .husky/pre-commit 'npm run pre-commit'",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d dist -b main -r git@github.com:francisxihe/life-toolkit.git --no-history"
   },
   "dependencies": {
@@ -43,6 +44,7 @@
     "react-router": "^5.2.0",
     "react-router-dom": "^6.25.1",
     "redux": "^4.1.2",
+    "zh-cn": "link:dayjs/locale/zh-cn",
     "zod": "^3.24.1"
   },
   "devDependencies": {

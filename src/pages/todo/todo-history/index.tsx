@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { format, isWithinInterval } from 'date-fns';
 import { Card, Grid, Typography, Statistic } from '@arco-design/web-react';
-import { useTodoContext } from '../context/TodoContext';
+import { useTodoContext } from '../context';
 import { CompletedTodoList } from './components/completed-todo-list';
 import {
   HistoryFilters,
@@ -34,7 +34,7 @@ export default function TodoHistoryPage() {
 
       // Date range filter
       if (filters.dateRange.from && filters.dateRange.to) {
-        const completedDate = new Date(todo.completedAt);
+        const completedDate = new Date(todo.doneAt);
         if (
           !isWithinInterval(completedDate, {
             start: filters.dateRange.from,
@@ -73,7 +73,7 @@ export default function TodoHistoryPage() {
   const chartData = useMemo(() => {
     const data: { date: string; completed: number }[] = [];
     const grouped = filteredTodos.reduce((acc, todo) => {
-      const date = format(new Date(todo.completedAt), 'yyyy-MM-dd');
+      const date = format(new Date(todo.doneAt), 'yyyy-MM-dd');
       acc[date] = (acc[date] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
@@ -98,7 +98,7 @@ export default function TodoHistoryPage() {
     const avgCompletionTime =
       filteredTodos.reduce((acc, todo) => {
         const start = new Date(todo.startDateTime);
-        const end = new Date(todo.completedAt);
+        const end = new Date(todo.doneAt);
         return acc + (end.getTime() - start.getTime());
       }, 0) / (total || 1);
 

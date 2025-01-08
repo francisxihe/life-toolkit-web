@@ -8,16 +8,18 @@ import {
   Dispatch,
   SetStateAction,
 } from 'react';
-import { Todo, TodoFilters } from '../types';
+import { Todo, TodoFilters } from './types';
+import dayjs from 'dayjs';
 
 interface TodoContextType {
   todoList: Todo[];
   currentTodo: Todo | null;
   setCurrentTodo: Dispatch<SetStateAction<Todo | null>>;
   getTodoList: () => void;
-  addTodo: (todo: Omit<Todo, 'id' | 'completed' | 'createdAt'>) => void;
+  addTodo: (todo: Omit<Todo, 'id' | 'status' | 'createdAt'>) => void;
+  doneTodo: (id: string) => void;
   updateTodo: (id: string, todo: Partial<Todo>) => void;
-  toggleTodo: (id: string) => void;
+  restoreTodo: (id: string) => void;
   deleteTodo: (id: string) => void;
   abandonTodo: (id: string) => void;
   showTodoDetail: (id: string) => void;
@@ -34,10 +36,10 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     setTodoList(todoList);
   }
 
-  function addTodo(todo: Omit<Todo, 'id' | 'completed'>) {
+  function addTodo(todo: Omit<Todo, 'id' | 'status'>) {
     const newTodo = {
       id: Math.random().toString(36).substring(7),
-      completed: false,
+      status: 'todo',
       createdAt: new Date().toISOString(),
       ...todo,
     };
@@ -53,12 +55,36 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
     getTodoList();
   }
 
-  function toggleTodo(id: string) {
+  function doneTodo(id: string) {
     localStorage.setItem(
       'todoList',
       JSON.stringify(
         todoList.map((todo) =>
-          todo.id === id ? { ...todo, completed: !todo.completed } : todo
+          todo.id === id
+            ? {
+                ...todo,
+                status: 'done',
+                doneAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+              }
+            : todo
+        )
+      )
+    );
+    getTodoList();
+  }
+
+  function restoreTodo(id: string) {
+    localStorage.setItem(
+      'todoList',
+      JSON.stringify(
+        todoList.map((todo) =>
+          todo.id === id
+            ? {
+                ...todo,
+                status: 'todo',
+                doneAt: undefined,
+              }
+            : todo
         )
       )
     );
@@ -81,8 +107,8 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
           todo.id === id
             ? {
                 ...todo,
-                abandoned: true,
-                abandonedAt: new Date().toISOString(),
+                status: 'abandoned',
+                abandonedAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
               }
             : todo
         )
@@ -104,7 +130,8 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
         setCurrentTodo,
         getTodoList,
         addTodo,
-        toggleTodo,
+        doneTodo,
+        restoreTodo,
         deleteTodo,
         abandonTodo,
         updateTodo,

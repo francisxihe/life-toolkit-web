@@ -1,6 +1,6 @@
 'use client';
 
-import { TodoProvider } from './context/TodoContext';
+import { TodoProvider } from './context';
 
 export default function TodoLayout({
   children,

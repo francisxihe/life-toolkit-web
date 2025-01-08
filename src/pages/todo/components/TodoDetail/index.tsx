@@ -1,12 +1,12 @@
 import { Button, Input, Divider } from '@arco-design/web-react';
-import { useTodoContext } from '../../context/TodoContext';
+import { useTodoContext } from '../../context';
 import TodoDetailHeader from './Header';
 import TodoDetailFooter from './Footer';
 import FlexibleContainer from '@/components/FlexibleContainer';
 const TextArea = Input.TextArea;
 
 export default function TodoDetail() {
-  const { currentTodo, updateTodo, setCurrentTodo, toggleTodo } =
+  const { currentTodo, updateTodo, setCurrentTodo, restoreTodo } =
     useTodoContext();
 
   return (

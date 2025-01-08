@@ -2,7 +2,7 @@
 
 import { useMemo } from 'react';
 import { Card, Grid, Typography } from '@arco-design/web-react';
-import { useTodoContext } from '../context/TodoContext';
+import { useTodoContext } from '../context';
 
 const { Row, Col } = Grid;
 const { Title, Text } = Typography;
@@ -12,10 +12,10 @@ export function TodoStats() {
 
   const stats = useMemo(() => {
     const total = todoList.length;
-    const completed = todoList.filter((todo) => todo.completed).length;
+    const completed = todoList.filter((todo) => todo.status === 'done').length;
     const pending = total - completed;
     const highPriority = todoList.filter(
-      (todo) => todo.importance === 'high' && todo.urgency === 'high'
+      (todo) => todo.importance === 1 && todo.urgency === 1
     ).length;
 
     return { total, completed, pending, highPriority };

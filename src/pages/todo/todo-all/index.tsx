@@ -4,8 +4,9 @@ import { TodoFilters } from './TodoFilters';
 import { TodoList } from '../components/TodoList';
 import { Button, Table } from '@arco-design/web-react';
 import FlexibleContainer from '@/components/FlexibleContainer';
-import { useTodoContext } from '../context/TodoContext';
+import { useTodoContext } from '../context';
 import { useEffect } from 'react';
+import { URGENCY_MAP, IMPORTANCE_MAP } from '../constants';
 
 export default function TodoPage() {
   const { todoList, currentTodo, getTodoList } = useTodoContext();
@@ -17,12 +18,40 @@ export default function TodoPage() {
   const columns = [
     { title: '待办', dataIndex: 'name', key: 'name' },
     { title: '描述', dataIndex: 'description', key: 'description' },
-    { title: '状态', dataIndex: 'completed', key: 'completed' },
-    { title: '标签', dataIndex: 'tags', key: 'tags' },
+    {
+      title: '状态',
+      key: 'status',
+      render: (_, record) => {
+        switch (record.status) {
+          case 'done':
+            return <div className="text-success">已完成({record.doneAt})</div>;
+          case 'todo':
+            return <div className="text-warning">未完成</div>;
+          case 'abandoned':
+            return (
+              <div className="text-danger">已放弃({record.abandonedAt})</div>
+            );
+          default:
+            return '--';
+        }
+      },
+    },
     { title: '计划日期', dataIndex: 'planDate', key: 'planDate' },
-    { title: '完成日期', dataIndex: 'completedAt', key: 'completedAt' },
-    { title: '紧急程度', dataIndex: 'urgency', key: 'urgency' },
-    { title: '重要程度', dataIndex: 'importance', key: 'importance' },
+    {
+      title: '紧急程度',
+      key: 'urgency',
+      render: (_, record) => (
+        <div>{URGENCY_MAP.get(record.urgency)?.label}</div>
+      ),
+    },
+    {
+      title: '重要程度',
+      key: 'importance',
+      render: (_, record) => (
+        <div>{IMPORTANCE_MAP.get(record.importance)?.label}</div>
+      ),
+    },
+    { title: '标签', dataIndex: 'tags', key: 'tags' },
     {
       title: <span className="text-text-1 font-[500] px-4">操作</span>,
       key: 'action',

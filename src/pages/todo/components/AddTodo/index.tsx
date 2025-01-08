@@ -1,7 +1,7 @@
 'use client';
 
 import { Input, Select, Popover } from '@arco-design/web-react';
-import { useTodoContext } from '../../context/TodoContext';
+import { useTodoContext } from '../../context';
 import { IMPORTANCE_MAP, URGENCY_MAP } from '../../constants';
 import { useState } from 'react';
 import CustomIcon from '@/components/Icon';
@@ -16,15 +16,16 @@ type TodoFormData = {
   tags?: string[];
   importance?: number;
   urgency?: number;
-  planDate?: string;
+  planDate: string;
   planTimeRange?: [string, string];
   recurring?: 'daily' | 'weekly' | 'monthly' | 'yearly';
 };
 
-export function TodoForm() {
+export default function AddTodo() {
   const { addTodo } = useTodoContext();
   const defaultFormData = {
     name: '',
+    planDate: dayjs().format('YYYY-MM-DD'),
   };
   const [formData, setFormData] = useState<TodoFormData>(defaultFormData);
 
@@ -75,12 +76,7 @@ export function TodoForm() {
               ...prev,
               planDate: formData.date.format('YYYY-MM-DD'),
               planTimeRange: formData.timeRange,
-              recurring: formData.recurring as
-                | 'none'
-                | 'daily'
-                | 'weekly'
-                | 'monthly'
-                | 'yearly',
+              recurring: formData.recurring as TodoFormData['recurring'],
             }));
           }}
         />

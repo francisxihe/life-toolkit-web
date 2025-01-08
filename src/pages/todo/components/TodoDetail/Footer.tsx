@@ -1,5 +1,5 @@
 import { Button } from '@arco-design/web-react';
-import { useTodoContext } from '../../context/TodoContext';
+import { useTodoContext } from '../../context';
 
 export default function TodoDetailFooter() {
   const { currentTodo, updateTodo, setCurrentTodo } = useTodoContext();

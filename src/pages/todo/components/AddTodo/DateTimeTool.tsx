@@ -4,8 +4,30 @@ import dayjs, { Dayjs } from 'dayjs';
 import { RECURRENCE_PATTERNS } from '../../constants';
 import CustomIcon from '@/components/Icon';
 import { useState } from 'react';
+import 'dayjs/locale/zh-cn';
 
 const { RangePicker } = TimePicker;
+
+dayjs.locale('zh-cn');
+const today = dayjs().format('YYYY-MM-DD');
+
+const getFormattedDate = (date) => {
+  const diff = date.diff(today, 'days'); // 计算两个日期的差异
+
+  if (diff === 0) {
+    return '今天'; // 如果是今天
+  }
+  if (diff === -1) {
+    return '昨天'; // 如果是昨天
+  }
+  if (diff === 1) {
+    return '明天'; // 如果是明天
+  }
+  if (diff > 1 && diff < 7) {
+    return date.format('ddd'); // 如果是接下来的一周，显示周几
+  }
+  return date.format('YYYY-MM-DD'); // 如果大于7天，显示完整日期
+};
 
 export default function DateTimeTool(props: {
   formData: {
@@ -135,8 +157,12 @@ export default function DateTimeTool(props: {
       }
     >
       <div className="px-1.5 h-7 rounded-sm hover:bg-fill-3 flex items-center gap-2 cursor-pointer">
-        <CustomIcon width={16} height={16} id="today-icon-27" />
-        今天
+        <CustomIcon
+          width={16}
+          height={16}
+          id={`today-icon-${formData.date.format('D')}`}
+        />
+        {getFormattedDate(formData.date)}
       </div>
     </Popover>
   );
