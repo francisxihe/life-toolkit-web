@@ -5,7 +5,7 @@ import { Input, Select, Button, Space, Grid } from '@arco-design/web-react';
 import { IconSearch } from '@arco-design/web-react/icon';
 import { IMPORTANCE_MAP, URGENCY_MAP } from '../constants';
 import { TagInput } from '../components/TagInput';
-import type { TodoFilters } from '../types';
+import type { TodoFilters } from '../service/types';
 import { useState } from 'react';
 
 const { Row, Col } = Grid;

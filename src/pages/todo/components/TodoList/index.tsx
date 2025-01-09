@@ -11,33 +11,36 @@ import {
   Button,
 } from '@arco-design/web-react';
 import { useTodoContext } from '../../context';
-import { Todo } from '../../types';
+import { Todo } from '../../service/types';
 import { isToday } from 'date-fns';
 import FlexibleContainer from '@/components/FlexibleContainer';
 import { URGENCY_MAP, IMPORTANCE_MAP } from '../../constants';
 import IconSelector from '../IconSelector';
 import DoneTodoCheckbox from '../DoneTodoCheckbox';
 import CustomIcon from '@/components/Icon';
-import TodoService from '../../ApiService';
+import TodoService from '../../service/api';
+import { Divider } from '@arco-design/web-react';
+
 const { Text, Paragraph } = Typography;
 
-export function TodoList({ todoList }: { todoList: Todo[] }) {
+function TodoList(props: {
+  todoList: Todo[];
+  onClickTodo: (todo: Todo) => void;
+  loadTodoList: () => void;
+}) {
   const { showTodoDetail, loadTodoList } = useTodoContext();
 
   return (
     <div className="w-full mt-[-8px]">
-      {todoList.map((todo) => (
-        <div
-          className={'w-full border-b pl-4 py-2 bg-background'}
-          key={todo.id}
-        >
+      {props.todoList.map((todo) => (
+        <div className={'w-full pl-4 py-2 bg-background'} key={todo.id}>
           <FlexibleContainer direction="vertical" className="items-start">
             <FlexibleContainer.Fixed className="flex items-start ">
               <DoneTodoCheckbox todo={todo} />
             </FlexibleContainer.Fixed>
             <FlexibleContainer.Shrink
-              onClick={() => showTodoDetail(todo.id)}
-              className="cursor-pointer"
+              onClick={() => showTodoDetail(todo)}
+              className="cursor-pointer border-b after:content-[''] after:block after:h-1 after:w-full"
             >
               <div className="leading-8">{todo.name}</div>
               {todo.description && (
@@ -92,7 +95,7 @@ export function TodoList({ todoList }: { todoList: Todo[] }) {
                 )}
               </div>
             </FlexibleContainer.Shrink>
-            <FlexibleContainer.Fixed>
+            <FlexibleContainer.Fixed className="border-b h-full after:content-[''] after:block after:h-1 after:w-full">
               <div className="h-8 flex items-center">
                 <Popover
                   trigger="click"
@@ -134,3 +137,5 @@ export function TodoList({ todoList }: { todoList: Todo[] }) {
     </div>
   );
 }
+
+export default TodoList;

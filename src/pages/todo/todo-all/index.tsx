@@ -1,20 +1,23 @@
 'use client';
 
 import { TodoFilters } from './TodoFilters';
-import { TodoList } from '../components/TodoList';
 import { Button, Modal, Table } from '@arco-design/web-react';
 import FlexibleContainer from '@/components/FlexibleContainer';
 import { useTodoContext } from '../context';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { URGENCY_MAP, IMPORTANCE_MAP } from '../constants';
-import TodoService from '../ApiService';
-
+import TodoService from '../service/api';
+import { Todo } from '../service/types';
+import TodoEditorDrawer from './TodoEditorDrawer';
 export default function TodoPage() {
   const { todoList, loadTodoList } = useTodoContext();
 
   useEffect(() => {
     loadTodoList();
   }, []);
+
+  const [currentTodo, setCurrentTodo] = useState<Todo | null>(null);
+  const [drawerVisible, setDrawerVisible] = useState(false);
 
   const columns = [
     { title: '待办', dataIndex: 'name', key: 'name' },
@@ -58,7 +61,15 @@ export default function TodoPage() {
       key: 'action',
       render: (_, record) => (
         <div>
-          <Button type="text">编辑</Button>
+          <Button
+            type="text"
+            onClick={() => {
+              setCurrentTodo(record);
+              setDrawerVisible(true);
+            }}
+          >
+            编辑
+          </Button>
           <Button
             type="text"
             onClick={() =>
@@ -80,32 +91,43 @@ export default function TodoPage() {
   ];
 
   return (
-    <FlexibleContainer className="bg-background-2 rounded-lg w-full h-full">
-      <FlexibleContainer.Fixed className="px-5 py-2 flex justify-between items-center border-b">
-        <div className="text-text-1 text-title-2 font-[500] py-1">全部待办</div>
-      </FlexibleContainer.Fixed>
+    <>
+      <FlexibleContainer className="bg-background-2 rounded-lg w-full h-full">
+        <FlexibleContainer.Fixed className="px-5 py-2 flex justify-between items-center border-b">
+          <div className="text-text-1 text-title-2 font-[500] py-1">
+            全部待办
+          </div>
+        </FlexibleContainer.Fixed>
 
-      <FlexibleContainer.Fixed className="px-5 flex border-b">
-        <TodoFilters />
-      </FlexibleContainer.Fixed>
+        <FlexibleContainer.Fixed className="px-5 flex border-b">
+          <TodoFilters />
+        </FlexibleContainer.Fixed>
 
-      <FlexibleContainer.Fixed className="px-5 flex">
-        <Button type="primary">新建</Button>
-      </FlexibleContainer.Fixed>
+        <FlexibleContainer.Fixed className="px-5 flex">
+          <Button type="primary">新建</Button>
+        </FlexibleContainer.Fixed>
 
-      {/* <TodoStats /> */}
-      <FlexibleContainer.Shrink className="px-5 w-full h-full flex">
-        <Table
-          className="w-full"
-          columns={columns}
-          data={todoList}
-          pagination={false}
-          rowKey="id"
-        />
-      </FlexibleContainer.Shrink>
-      {/* <div className="w-full py-2">
-          <TodoForm />
-        </div> */}
-    </FlexibleContainer>
+        <FlexibleContainer.Shrink className="px-5 w-full h-full flex">
+          <Table
+            className="w-full"
+            columns={columns}
+            data={todoList}
+            pagination={false}
+            rowKey="id"
+          />
+        </FlexibleContainer.Shrink>
+      </FlexibleContainer>
+      <TodoEditorDrawer
+        visible={drawerVisible}
+        todo={currentTodo}
+        onCancel={async () => {
+          setDrawerVisible(false);
+        }}
+        onChange={async () => {
+          setDrawerVisible(false);
+          await loadTodoList();
+        }}
+      />
+    </>
   );
 }

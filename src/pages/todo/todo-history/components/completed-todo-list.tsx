@@ -2,7 +2,7 @@
 
 import { format } from 'date-fns';
 import { Card, Tag, Empty } from '@arco-design/web-react';
-import { Todo } from '../../types';
+import { Todo } from '../../service/types';
 import { getPriorityQuadrant } from '../../constants';
 
 interface CompletedTodoListProps {

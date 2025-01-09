@@ -1,10 +1,15 @@
 import { Checkbox } from '@arco-design/web-react';
 import styles from './style.module.less';
-import { Todo } from '../../types';
-import TodoService from '../../ApiService';
+import TodoService from '../../service/api';
 import { useTodoContext } from '../../context';
+import { Todo } from '../../service/types';
 
-export default function DoneTodoCheckbox(props: { todo: Todo }) {
+export default function DoneTodoCheckbox(props: {
+  todo: {
+    status: Todo['status'];
+    id: string;
+  };
+}) {
   const { loadTodoList } = useTodoContext();
 
   return (

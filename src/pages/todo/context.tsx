@@ -8,16 +8,16 @@ import {
   Dispatch,
   SetStateAction,
 } from 'react';
-import { Todo, TodoFilters } from './types';
-import dayjs from 'dayjs';
-import TodoService from './ApiService';
+import { Todo } from './service/types';
+import TodoService from './service/api';
+import { GetTodoListParams } from './service/types';
 
 interface TodoContextType {
   todoList: Todo[];
   currentTodo: Todo | null;
   setCurrentTodo: Dispatch<SetStateAction<Todo | null>>;
-  loadTodoList: () => void;
-  showTodoDetail: (id: string) => void;
+  loadTodoList: (params?: GetTodoListParams) => Promise<void>;
+  showTodoDetail: (todo: Todo) => void;
 }
 
 const TodoContext = createContext<TodoContextType | undefined>(undefined);
@@ -26,13 +26,12 @@ export function TodoProvider({ children }: { children: React.ReactNode }) {
   const [todoList, setTodoList] = useState<Todo[]>([]);
   const [currentTodo, setCurrentTodo] = useState<Todo | null>(null);
 
-  function loadTodoList() {
-    const todoList = TodoService.getTodoList();
+  async function loadTodoList(params?: GetTodoListParams) {
+    const todoList = await TodoService.getTodoList(params);
     setTodoList(todoList);
   }
 
-  function showTodoDetail(id: string) {
-    const todo = todoList.find((todo) => todo.id === id);
+  function showTodoDetail(todo: Todo) {
     setCurrentTodo(todo);
   }
 

@@ -9,18 +9,8 @@ import IconSelector from '../IconSelector';
 const TextArea = Input.TextArea;
 import DateTimeTool from './DateTimeTool';
 import dayjs from 'dayjs';
-import TodoService from '../../ApiService';
-
-type TodoFormData = {
-  name: string;
-  description?: string;
-  tags?: string[];
-  importance?: number;
-  urgency?: number;
-  planDate: string;
-  planTimeRange?: [string, string];
-  recurring?: 'daily' | 'weekly' | 'monthly' | 'yearly';
-};
+import TodoService from '../../service/api';
+import { TodoFormData } from '../../types';
 
 export default function AddTodo() {
   const { loadTodoList } = useTodoContext();
