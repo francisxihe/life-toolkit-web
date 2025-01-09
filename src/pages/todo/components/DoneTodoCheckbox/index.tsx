@@ -9,6 +9,7 @@ export default function DoneTodoCheckbox(props: {
     status: Todo['status'];
     id: string;
   };
+  onChange: () => Promise<void>;
 }) {
   const { loadTodoList } = useTodoContext();
 
@@ -18,13 +19,13 @@ export default function DoneTodoCheckbox(props: {
     >
       <Checkbox
         checked={props.todo.status === 'done'}
-        onChange={() => {
+        onChange={async () => {
           if (props.todo.status === 'todo') {
-            TodoService.doneTodo(props.todo.id);
+            await TodoService.doneTodo(props.todo.id);
           } else {
-            TodoService.restoreTodo(props.todo.id);
+            await TodoService.restoreTodo(props.todo.id);
           }
-          loadTodoList();
+          await props.onChange();
         }}
       />
     </div>

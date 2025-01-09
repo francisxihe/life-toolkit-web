@@ -10,7 +10,6 @@ import {
   Popover,
   Button,
 } from '@arco-design/web-react';
-import { useTodoContext } from '../../context';
 import { Todo } from '../../service/types';
 import { isToday } from 'date-fns';
 import FlexibleContainer from '@/components/FlexibleContainer';
@@ -19,30 +18,69 @@ import IconSelector from '../IconSelector';
 import DoneTodoCheckbox from '../DoneTodoCheckbox';
 import CustomIcon from '@/components/Icon';
 import TodoService from '../../service/api';
-import { Divider } from '@arco-design/web-react';
 
 const { Text, Paragraph } = Typography;
 
 function TodoList(props: {
   todoList: Todo[];
   onClickTodo: (todo: Todo) => void;
-  loadTodoList: () => void;
+  refreshTodoList: () => void;
 }) {
-  const { showTodoDetail, loadTodoList } = useTodoContext();
-
   return (
     <div className="w-full mt-[-8px]">
       {props.todoList.map((todo) => (
         <div className={'w-full pl-4 py-2 bg-background'} key={todo.id}>
           <FlexibleContainer direction="vertical" className="items-start">
             <FlexibleContainer.Fixed className="flex items-start ">
-              <DoneTodoCheckbox todo={todo} />
+              <DoneTodoCheckbox
+                todo={todo}
+                onChange={async () => {
+                  await props.refreshTodoList();
+                }}
+              />
             </FlexibleContainer.Fixed>
             <FlexibleContainer.Shrink
-              onClick={() => showTodoDetail(todo)}
+              onClick={() => props.onClickTodo(todo)}
               className="cursor-pointer border-b after:content-[''] after:block after:h-1 after:w-full"
             >
-              <div className="leading-8">{todo.name}</div>
+              <div className="leading-8 flex items-center justify-between">
+                {todo.name}
+
+                <div className="h-8 flex items-center">
+                  <Popover
+                    trigger="click"
+                    content={
+                      <div className="w-40">
+                        <div
+                          className="cursor-pointer px-3 h-9 leading-9 hover:bg-fill-2"
+                          onClick={() => {
+                            TodoService.abandonTodo(todo.id);
+                            props.refreshTodoList();
+                          }}
+                        >
+                          放弃
+                        </div>
+                        <div
+                          className="cursor-pointer px-3 h-9 leading-9 hover:bg-fill-2"
+                          onClick={() => {
+                            TodoService.deleteTodo(todo.id);
+                            props.refreshTodoList();
+                          }}
+                        >
+                          删除
+                        </div>
+                      </div>
+                    }
+                  >
+                    <Button
+                      iconOnly
+                      type="text"
+                      size="mini"
+                      icon={<CustomIcon id="more-for-task" />}
+                    />
+                  </Popover>
+                </div>
+              </div>
               {todo.description && (
                 <Paragraph
                   className="text-body-1 !mb-0.5"
@@ -95,42 +133,6 @@ function TodoList(props: {
                 )}
               </div>
             </FlexibleContainer.Shrink>
-            <FlexibleContainer.Fixed className="border-b h-full after:content-[''] after:block after:h-1 after:w-full">
-              <div className="h-8 flex items-center">
-                <Popover
-                  trigger="click"
-                  content={
-                    <div className="w-40">
-                      <div
-                        className="cursor-pointer px-3 h-9 leading-9 hover:bg-fill-2"
-                        onClick={() => {
-                          TodoService.abandonTodo(todo.id);
-                          loadTodoList();
-                        }}
-                      >
-                        放弃
-                      </div>
-                      <div
-                        className="cursor-pointer px-3 h-9 leading-9 hover:bg-fill-2"
-                        onClick={() => {
-                          TodoService.deleteTodo(todo.id);
-                          loadTodoList();
-                        }}
-                      >
-                        删除
-                      </div>
-                    </div>
-                  }
-                >
-                  <Button
-                    iconOnly
-                    type="text"
-                    size="mini"
-                    icon={<CustomIcon id="more-for-task" />}
-                  />
-                </Popover>
-              </div>
-            </FlexibleContainer.Fixed>
           </FlexibleContainer>
         </div>
       ))}

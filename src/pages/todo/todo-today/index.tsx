@@ -9,13 +9,12 @@ import TodoDetail from '../components/TodoDetail';
 import styles from './style.module.less';
 import TodoService from '../service/api';
 import { Todo } from '../service/types';
+import { flushSync } from 'react-dom';
 const today = dayjs().format('YYYY-MM-DD');
 const tomorrow = dayjs().add(1, 'day').format('YYYY-MM-DD');
 const yesterday = dayjs().subtract(1, 'day').format('YYYY-MM-DD');
 
 export default function TodoToday() {
-  const { todoList, currentTodo, showTodoDetail } = useTodoContext();
-
   const [todayTodoList, setTodayTodoList] = useState<Todo[]>([]);
   const [todayDoneTodoList, setTodayDoneTodoList] = useState<Todo[]>([]);
   const [expiredTodoList, setExpiredTodoList] = useState<Todo[]>([]);
@@ -23,7 +22,7 @@ export default function TodoToday() {
     []
   );
 
-  async function loadData() {
+  async function refreshData() {
     const todos = await TodoService.getTodoList({
       status: 'todo',
       planDateStart: yesterday,
@@ -53,8 +52,17 @@ export default function TodoToday() {
   }
 
   useEffect(() => {
-    loadData();
+    refreshData();
   }, []);
+
+  const [currentTodo, setCurrentTodo] = useState<Todo | null>(null);
+
+  async function showTodoDetail(todo: Todo) {
+    flushSync(() => {
+      setCurrentTodo(null);
+    });
+    setCurrentTodo(todo);
+  }
 
   return (
     <FlexibleContainer className="bg-background-2 rounded-lg w-full h-full">
@@ -64,7 +72,21 @@ export default function TodoToday() {
 
       <FlexibleContainer.Shrink className="px-5 w-full h-full flex">
         <div className="w-full py-2">
-          <AddTodo />
+          <AddTodo
+            onSubmit={async (todoFormData) => {
+              await TodoService.addTodo({
+                name: todoFormData.name,
+                importance: todoFormData.importance,
+                urgency: todoFormData.urgency,
+                planDate: todoFormData.planDate || undefined,
+                planStartAt: todoFormData.planTimeRange?.[0] || undefined,
+                planEndAt: todoFormData.planTimeRange?.[1] || undefined,
+                recurring: todoFormData.recurring,
+                tags: todoFormData.tags,
+              });
+              refreshData();
+            }}
+          />
           <Collapse
             defaultActiveKey={['expired', 'today']}
             className={`${styles['custom-collapse']} mt-2`}
@@ -79,7 +101,7 @@ export default function TodoToday() {
                 <TodoList
                   todoList={expiredTodoList}
                   onClickTodo={showTodoDetail}
-                  loadTodoList={loadData}
+                  refreshTodoList={refreshData}
                 />
               </Collapse.Item>
             )}
@@ -92,7 +114,7 @@ export default function TodoToday() {
                 <TodoList
                   todoList={todayTodoList}
                   onClickTodo={showTodoDetail}
-                  loadTodoList={loadData}
+                  refreshTodoList={refreshData}
                 />
               </Collapse.Item>
             )}
@@ -105,7 +127,7 @@ export default function TodoToday() {
                 <TodoList
                   todoList={todayDoneTodoList}
                   onClickTodo={showTodoDetail}
-                  loadTodoList={loadData}
+                  refreshTodoList={refreshData}
                 />
               </Collapse.Item>
             )}
@@ -118,7 +140,7 @@ export default function TodoToday() {
                 <TodoList
                   todoList={todayAbandonedTodoList}
                   onClickTodo={showTodoDetail}
-                  loadTodoList={loadData}
+                  refreshTodoList={refreshData}
                 />
               </Collapse.Item>
             )}
@@ -134,7 +156,7 @@ export default function TodoToday() {
                   showTodoDetail(null);
                 }}
                 onChange={async (todo) => {
-                  loadData();
+                  refreshData();
                 }}
               />
             </div>

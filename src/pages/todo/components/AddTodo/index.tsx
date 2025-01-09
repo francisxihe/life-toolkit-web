@@ -1,7 +1,6 @@
 'use client';
 
 import { Input, Select, Popover } from '@arco-design/web-react';
-import { useTodoContext } from '../../context';
 import { IMPORTANCE_MAP, URGENCY_MAP } from '../../constants';
 import { useState } from 'react';
 import CustomIcon from '@/components/Icon';
@@ -9,14 +8,17 @@ import IconSelector from '../IconSelector';
 const TextArea = Input.TextArea;
 import DateTimeTool from './DateTimeTool';
 import dayjs from 'dayjs';
-import TodoService from '../../service/api';
 import { TodoFormData } from '../../types';
 
-export default function AddTodo() {
-  const { loadTodoList } = useTodoContext();
+export default function AddTodo(props: {
+  hiddenDate?: boolean;
+  onChange?: (todoFormData: TodoFormData) => void;
+  onSubmit?: (todoFormData: TodoFormData) => Promise<void>;
+}) {
   const defaultFormData = {
     name: '',
     planDate: dayjs().format('YYYY-MM-DD'),
+    subTodoList: [],
   };
   const [formData, setFormData] = useState<TodoFormData>(defaultFormData);
 
@@ -24,17 +26,7 @@ export default function AddTodo() {
     if (!formData.name) {
       return;
     }
-    TodoService.addTodo({
-      name: formData.name,
-      importance: formData.importance,
-      urgency: formData.urgency,
-      planDate: formData.planDate || undefined,
-      planStartAt: formData.planTimeRange?.[0] || undefined,
-      planEndAt: formData.planTimeRange?.[1] || undefined,
-      recurring: formData.recurring,
-      tags: formData.tags,
-    });
-    loadTodoList();
+    props.onSubmit?.(formData);
     setFormData(defaultFormData);
   };
 
@@ -49,6 +41,7 @@ export default function AddTodo() {
           className="text-body-3 !bg-transparent !border-none mb-1"
           onChange={(value) => {
             setFormData((prev) => ({ ...prev, name: value }));
+            props.onChange?.(formData);
           }}
           onPressEnter={() => {
             onSubmit();
@@ -57,27 +50,31 @@ export default function AddTodo() {
       </div>
 
       <div className="flex items-center gap-2 px-2.5 text-text-3">
-        <DateTimeTool
-          formData={{
-            date: dayjs(formData.planDate),
-            timeRange: formData.planTimeRange as [string, string],
-            recurring: formData.recurring,
-          }}
-          onChangeData={(formData) => {
-            setFormData((prev) => ({
-              ...prev,
-              planDate: formData.date.format('YYYY-MM-DD'),
-              planTimeRange: formData.timeRange,
-              recurring: formData.recurring as TodoFormData['recurring'],
-            }));
-          }}
-        />
+        {!props.hiddenDate && (
+          <DateTimeTool
+            formData={{
+              date: dayjs(formData.planDate),
+              timeRange: formData.planTimeRange as [string, string],
+              recurring: formData.recurring,
+            }}
+            onChangeData={(data) => {
+              setFormData((prev) => ({
+                ...prev,
+                planDate: data.date.format('YYYY-MM-DD'),
+                planTimeRange: data.timeRange,
+                recurring: data.recurring as TodoFormData['recurring'],
+              }));
+              props.onChange?.(formData);
+            }}
+          />
+        )}
         <IconSelector
           map={IMPORTANCE_MAP}
           iconName="priority-0"
           value={formData.importance}
           onChange={(value) => {
             setFormData((prev) => ({ ...prev, importance: value }));
+            props.onChange?.(formData);
           }}
         />
         <IconSelector
@@ -86,6 +83,7 @@ export default function AddTodo() {
           value={formData.urgency}
           onChange={(value) => {
             setFormData((prev) => ({ ...prev, urgency: value }));
+            props.onChange?.(formData);
           }}
         />
         <Popover
@@ -97,6 +95,7 @@ export default function AddTodo() {
                 className="text-body-3"
                 onChange={(value) => {
                   setFormData((prev) => ({ ...prev, description: value }));
+                  props.onChange?.(formData);
                 }}
               />
             </div>
@@ -121,6 +120,10 @@ export default function AddTodo() {
                 allowCreate={true}
                 placeholder="添加标签..."
                 className="rounded-md"
+                onChange={(value) => {
+                  setFormData((prev) => ({ ...prev, tags: value }));
+                  props.onChange?.(formData);
+                }}
               />
             </div>
           }

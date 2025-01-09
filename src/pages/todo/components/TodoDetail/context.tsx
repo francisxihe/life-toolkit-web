@@ -7,6 +7,7 @@ import {
   useEffect,
   Dispatch,
   useRef,
+  useCallback,
 } from 'react';
 import { Todo, TodoNode } from '../../service/types';
 import { TodoFormData } from '../../types';
@@ -18,6 +19,8 @@ interface TodoDetailContextType {
   setTodoFormData: Dispatch<React.SetStateAction<TodoFormData>>;
   onCancel: () => Promise<void>;
   onChange: (todo: TodoFormData) => Promise<void>;
+  refreshTodoFormData: (todo: Todo) => Promise<void>;
+  initTodoFormData: (todo: Todo) => Promise<void>;
 }
 
 const TodoDetailContext = createContext<TodoDetailContextType | undefined>(
@@ -67,15 +70,23 @@ export function TodoDetailProvider(props: {
   const [todoNode, setTodoNode] = useState<TodoNode>(props.todo as TodoNode);
   const todoNodeRef = useRef<TodoNode>();
 
-  useEffect(() => {
-    const initTodoFormData = async () => {
-      const fetchedTodoNode = await TodoService.getTodoNode(props.todo.id);
-      setTodoNode(fetchedTodoNode); // 更新状态
-      todoNodeRef.current = fetchedTodoNode; // 更新 ref 值
-      setTodoFormData(transformTodo(todoNodeRef.current));
-    };
-    initTodoFormData();
+  const refreshTodoFormData = async (todo: Todo) => {
+    const fetchedTodoNode = await TodoService.getTodoNode(todo.id);
+    setTodoNode(fetchedTodoNode);
+    todoNodeRef.current = fetchedTodoNode;
+    setTodoFormData(transformTodo(todoNodeRef.current));
+  };
+
+  const initTodoFormData = useCallback(async () => {
+    const fetchedTodoNode = await TodoService.getTodoNode(props.todo.id);
+    setTodoNode(fetchedTodoNode);
+    todoNodeRef.current = fetchedTodoNode;
+    setTodoFormData(transformTodo(todoNodeRef.current));
   }, [props.todo]);
+
+  useEffect(() => {
+    initTodoFormData();
+  }, [initTodoFormData]);
 
   async function onCancel() {
     setTodoFormData(null);
@@ -97,6 +108,8 @@ export function TodoDetailProvider(props: {
         setTodoFormData,
         onCancel,
         onChange,
+        refreshTodoFormData,
+        initTodoFormData,
       }}
     >
       {props.children}
