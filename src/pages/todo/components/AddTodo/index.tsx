@@ -2,7 +2,7 @@
 
 import { Input, Select, Popover } from '@arco-design/web-react';
 import { IMPORTANCE_MAP, URGENCY_MAP } from '../../constants';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CustomIcon from '@/components/Icon';
 import IconSelector from '../IconSelector';
 const TextArea = Input.TextArea;
@@ -39,9 +39,10 @@ export default function AddTodo(props: {
           type="primary"
           size="small"
           className="text-body-3 !bg-transparent !border-none mb-1"
-          onChange={(value) => {
-            setFormData((prev) => ({ ...prev, name: value }));
-            props.onChange?.(formData);
+          onChange={async (value) => {
+            const _formData = { ...formData, name: value };
+            setFormData(_formData);
+            props.onChange?.(_formData);
           }}
           onPressEnter={() => {
             onSubmit();
@@ -58,13 +59,14 @@ export default function AddTodo(props: {
               recurring: formData.recurring,
             }}
             onChangeData={(data) => {
-              setFormData((prev) => ({
-                ...prev,
+              const _formData = {
+                ...formData,
                 planDate: data.date.format('YYYY-MM-DD'),
                 planTimeRange: data.timeRange,
                 recurring: data.recurring as TodoFormData['recurring'],
-              }));
-              props.onChange?.(formData);
+              };
+              setFormData(_formData);
+              props.onChange?.(_formData);
             }}
           />
         )}
@@ -73,8 +75,9 @@ export default function AddTodo(props: {
           iconName="priority-0"
           value={formData.importance}
           onChange={(value) => {
-            setFormData((prev) => ({ ...prev, importance: value }));
-            props.onChange?.(formData);
+            const _formData = { ...formData, importance: value };
+            setFormData(_formData);
+            props.onChange?.(_formData);
           }}
         />
         <IconSelector
@@ -82,8 +85,9 @@ export default function AddTodo(props: {
           iconName="urgency"
           value={formData.urgency}
           onChange={(value) => {
-            setFormData((prev) => ({ ...prev, urgency: value }));
-            props.onChange?.(formData);
+            const _formData = { ...formData, urgency: value };
+            setFormData(_formData);
+            props.onChange?.(_formData);
           }}
         />
         <Popover
@@ -94,8 +98,9 @@ export default function AddTodo(props: {
                 placeholder="描述"
                 className="text-body-3"
                 onChange={(value) => {
-                  setFormData((prev) => ({ ...prev, description: value }));
-                  props.onChange?.(formData);
+                  const _formData = { ...formData, description: value };
+                  setFormData(_formData);
+                  props.onChange?.(_formData);
                 }}
               />
             </div>
@@ -121,8 +126,9 @@ export default function AddTodo(props: {
                 placeholder="添加标签..."
                 className="rounded-md"
                 onChange={(value) => {
-                  setFormData((prev) => ({ ...prev, tags: value }));
-                  props.onChange?.(formData);
+                  const _formData = { ...formData, tags: value };
+                  setFormData(_formData);
+                  props.onChange?.(_formData);
                 }}
               />
             </div>

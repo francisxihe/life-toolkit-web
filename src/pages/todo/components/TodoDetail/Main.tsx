@@ -52,11 +52,11 @@ export default function TodoDetailMain() {
       <div>
         <TodoList
           todoList={todoNode.subTodoList}
-          onClickTodo={(todo) => {
-            refreshTodoFormData(todo);
+          onClickTodo={async (todo) => {
+            await refreshTodoFormData(todo);
           }}
-          refreshTodoList={() => {
-            refreshTodoFormData(todoNode);
+          refreshTodoList={async () => {
+            await refreshTodoFormData(todoNode);
           }}
         />
       </div>
@@ -98,7 +98,7 @@ export default function TodoDetailMain() {
                     tags: subTodoFormData.tags,
                   });
 
-                  refreshTodoFormData(todoNode);
+                  await refreshTodoFormData(todoNode);
                   setAddSubTodoVisible(false);
                 }}
               >

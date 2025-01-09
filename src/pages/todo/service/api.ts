@@ -14,51 +14,70 @@ export default class TodoService {
     ).filter((todo) => !todo.parentId);
 
     if (params.planDateStart && params.planDateEnd) {
-      todoList = todoList.filter(
-        (todo) =>
-          dayjs(todo.planDate).isAfter(params.planDateStart, 'day') &&
-          dayjs(todo.planDate).isBefore(params.planDateEnd, 'day')
-      );
+      todoList = todoList
+        .filter((todo) => todo.planDate)
+        .filter(
+          (todo) =>
+            dayjs(todo.planDate).isAfter(params.planDateStart, 'day') &&
+            dayjs(todo.planDate).isBefore(params.planDateEnd, 'day')
+        );
     } else if (params.planDateStart) {
-      todoList = todoList.filter((todo) =>
-        dayjs(todo.planDate).isAfter(params.planDateStart, 'day')
-      );
+      todoList = todoList
+        .filter((todo) => todo.planDate)
+        .filter((todo) =>
+          dayjs(todo.planDate).isAfter(params.planDateStart, 'day')
+        );
     } else if (params.planDateEnd) {
-      todoList = todoList.filter((todo) =>
-        dayjs(todo.planDate).isBefore(params.planDateEnd, 'day')
-      );
+      todoList = todoList
+        .filter((todo) => todo.planDate)
+        .filter((todo) =>
+          dayjs(todo.planDate).isBefore(params.planDateEnd, 'day')
+        );
     }
 
     if (params.doneDateStart && params.doneDateEnd) {
-      todoList = todoList.filter(
-        (todo) =>
-          dayjs(todo.doneAt).isAfter(params.doneDateStart, 'day') &&
-          dayjs(todo.doneAt).isBefore(params.doneDateEnd, 'day')
-      );
+      todoList = todoList
+        .filter((todo) => todo.doneAt)
+        .filter((todo) => {
+          return (
+            dayjs(todo.doneAt).isAfter(params.doneDateStart, 'day') &&
+            dayjs(todo.doneAt).isBefore(params.doneDateEnd, 'day')
+          );
+        });
     } else if (params.doneDateStart) {
-      todoList = todoList.filter((todo) =>
-        dayjs(todo.doneAt).isAfter(params.doneDateStart, 'day')
-      );
+      todoList = todoList
+        .filter((todo) => todo.doneAt)
+        .filter((todo) =>
+          dayjs(todo.doneAt).isAfter(params.doneDateStart, 'day')
+        );
     } else if (params.doneDateEnd) {
-      todoList = todoList.filter((todo) =>
-        dayjs(todo.doneAt).isBefore(params.doneDateEnd, 'day')
-      );
+      todoList = todoList
+        .filter((todo) => todo.doneAt)
+        .filter((todo) =>
+          dayjs(todo.doneAt).isBefore(params.doneDateEnd, 'day')
+        );
     }
 
     if (params.abandonedDateStart && params.abandonedDateEnd) {
-      todoList = todoList.filter(
-        (todo) =>
-          dayjs(todo.abandonedAt).isAfter(params.abandonedDateStart, 'day') &&
-          dayjs(todo.abandonedAt).isBefore(params.abandonedDateEnd, 'day')
-      );
+      todoList = todoList
+        .filter((todo) => todo.abandonedAt)
+        .filter(
+          (todo) =>
+            dayjs(todo.abandonedAt).isAfter(params.abandonedDateStart, 'day') &&
+            dayjs(todo.abandonedAt).isBefore(params.abandonedDateEnd, 'day')
+        );
     } else if (params.abandonedDateStart) {
-      todoList = todoList.filter((todo) =>
-        dayjs(todo.abandonedAt).isAfter(params.abandonedDateStart, 'day')
-      );
+      todoList = todoList
+        .filter((todo) => todo.abandonedAt)
+        .filter((todo) =>
+          dayjs(todo.abandonedAt).isAfter(params.abandonedDateStart, 'day')
+        );
     } else if (params.abandonedDateEnd) {
-      todoList = todoList.filter((todo) =>
-        dayjs(todo.abandonedAt).isBefore(params.abandonedDateEnd, 'day')
-      );
+      todoList = todoList
+        .filter((todo) => todo.abandonedAt)
+        .filter((todo) =>
+          dayjs(todo.abandonedAt).isBefore(params.abandonedDateEnd, 'day')
+        );
     }
 
     if (params.status) {
@@ -87,6 +106,31 @@ export default class TodoService {
     return todoTree;
   }
 
+  static async getTodoSubTodoIdList(todoId: string): Promise<string[]> {
+    const todoList: Todo[] = JSON.parse(
+      localStorage.getItem('todoList') || '[]'
+    );
+    const todo = todoList.find((todo) => todo.id === todoId);
+    if (!todo) {
+      throw new Error('Todo not found');
+    }
+
+    const todoSubTodoIdList: string[] = [];
+
+    const recursiveSub = async (todoId: string) => {
+      (await this.getSubTodoList(todoId)).forEach((t) => {
+        if (t.status === 'todo') {
+          todoSubTodoIdList.push(t.id);
+        }
+        recursiveSub(t.id);
+      });
+    };
+
+    await recursiveSub(todoId);
+
+    return todoSubTodoIdList;
+  }
+
   static async getTodoNode(todoId: string): Promise<TodoNode> {
     const todoList: Todo[] = JSON.parse(
       localStorage.getItem('todoList') || '[]'
@@ -97,7 +141,7 @@ export default class TodoService {
     }
 
     // 递归获取子待办
-    const getSubTodoList = async (todoId: string) => {
+    const recursiveGetSub = async (todoId: string) => {
       const subTodoList: SubTodoNode[] = (
         await this.getSubTodoList(todoId)
       ).map((t) => ({
@@ -106,13 +150,13 @@ export default class TodoService {
       }));
 
       for (let i = 0; i < subTodoList.length; i++) {
-        subTodoList[i].subTodoList = await getSubTodoList(subTodoList[i].id);
+        subTodoList[i].subTodoList = await recursiveGetSub(subTodoList[i].id);
       }
 
       return subTodoList;
     };
 
-    const subTodoList = await getSubTodoList(todo.id);
+    const subTodoList = await recursiveGetSub(todo.id);
 
     return {
       ...todo,
@@ -132,7 +176,7 @@ export default class TodoService {
     const newTodo = {
       id: Math.random().toString(36).substring(7),
       status: 'todo',
-      createdAt: new Date().toISOString(),
+      createdAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       ...todo,
     };
     localStorage.setItem('todoList', JSON.stringify([...todoList, newTodo]));
@@ -151,7 +195,7 @@ export default class TodoService {
       id: Math.random().toString(36).substring(7),
       parentId: todoId,
       status: 'todo',
-      createdAt: new Date().toISOString(),
+      createdAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
       ...subTodo,
     };
     localStorage.setItem('todoList', JSON.stringify([...todoList, newSubTodo]));
@@ -169,7 +213,7 @@ export default class TodoService {
     );
   }
 
-  static async doneTodo(id: string) {
+  static async batchDoneTodo(idList: string[]) {
     const todoList: Todo[] = JSON.parse(
       localStorage.getItem('todoList') || '[]'
     );
@@ -178,7 +222,7 @@ export default class TodoService {
       'todoList',
       JSON.stringify(
         todoList.map((todo) =>
-          todo.id === id
+          idList.includes(todo.id)
             ? {
                 ...todo,
                 status: 'done',

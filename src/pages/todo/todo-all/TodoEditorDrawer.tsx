@@ -23,7 +23,7 @@ export default function TodoEditorDrawer(props: {
     >
       <TodoDetail
         todo={props.todo}
-        onCancel={() => {
+        onClose={() => {
           return props.onCancel();
         }}
         onChange={() => {

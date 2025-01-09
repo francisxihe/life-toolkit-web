@@ -15,7 +15,7 @@ import { isToday } from 'date-fns';
 import FlexibleContainer from '@/components/FlexibleContainer';
 import { URGENCY_MAP, IMPORTANCE_MAP } from '../../constants';
 import IconSelector from '../IconSelector';
-import DoneTodoCheckbox from '../DoneTodoCheckbox';
+import DoneTodoCheckbox from './DoneTodoCheckbox';
 import CustomIcon from '@/components/Icon';
 import TodoService from '../../service/api';
 
@@ -23,8 +23,8 @@ const { Text, Paragraph } = Typography;
 
 function TodoList(props: {
   todoList: Todo[];
-  onClickTodo: (todo: Todo) => void;
-  refreshTodoList: () => void;
+  onClickTodo: (todo: Todo) => Promise<void>;
+  refreshTodoList: () => Promise<void>;
 }) {
   return (
     <div className="w-full mt-[-8px]">

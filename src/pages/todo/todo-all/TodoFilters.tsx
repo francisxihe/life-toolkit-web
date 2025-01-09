@@ -7,17 +7,11 @@ import { IMPORTANCE_MAP, URGENCY_MAP } from '../constants';
 import { TagInput } from '../components/TagInput';
 import type { TodoFilters } from '../service/types';
 import { useState } from 'react';
-
+import { useTodoAllContext } from './context';
 const { Row, Col } = Grid;
 
 export function TodoFilters() {
-  const [filters, setFilters] = useState<TodoFilters>({
-    search: '',
-    importance: undefined,
-    urgency: undefined,
-    status: 'all',
-    tags: [],
-  });
+  const { getTodoList, filters, setFilters } = useTodoAllContext();
 
   const handleSearchChange = useCallback(
     (value: string) => {
@@ -27,21 +21,21 @@ export function TodoFilters() {
   );
 
   const handleImportanceChange = useCallback(
-    (value: number | null) => {
+    (value: TodoFilters['importance']) => {
       setFilters((prev: TodoFilters) => ({ ...prev, importance: value }));
     },
     [setFilters]
   );
 
   const handleUrgencyChange = useCallback(
-    (value: number | null) => {
+    (value: TodoFilters['urgency']) => {
       setFilters((prev: TodoFilters) => ({ ...prev, urgency: value }));
     },
     [setFilters]
   );
 
   const handleStatusChange = useCallback(
-    (value: string) => {
+    (value: TodoFilters['status']) => {
       setFilters((prev: TodoFilters) => ({ ...prev, status: value }));
     },
     [setFilters]
@@ -59,17 +53,13 @@ export function TodoFilters() {
       search: '',
       importance: undefined,
       urgency: undefined,
-      status: 'all',
+      status: undefined,
       tags: [],
     });
   }, [setFilters]);
 
   return (
-    <Space
-      direction="vertical"
-      style={{ width: '100%', marginBottom: 24 }}
-      size="large"
-    >
+    <Space className="w-full my-4" direction="vertical" size="large">
       <Row gutter={[16, 16]}>
         <Col flex="auto" span={6}>
           <Input
@@ -128,7 +118,15 @@ export function TodoFilters() {
           />
         </Col>
         <Col span={6}>
-          <Button onClick={clearFilters}>Clear Filters</Button>
+          <Button onClick={clearFilters}>清除</Button>
+          <Button
+            type="primary"
+            onClick={() => {
+              getTodoList();
+            }}
+          >
+            查询
+          </Button>
         </Col>
       </Row>
     </Space>

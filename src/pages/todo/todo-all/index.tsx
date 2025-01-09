@@ -3,17 +3,23 @@
 import { TodoFilters } from './TodoFilters';
 import { Button, Modal, Table } from '@arco-design/web-react';
 import FlexibleContainer from '@/components/FlexibleContainer';
-import { useTodoContext } from '../context';
 import { useEffect, useState } from 'react';
 import { URGENCY_MAP, IMPORTANCE_MAP } from '../constants';
 import TodoService from '../service/api';
 import { Todo } from '../service/types';
+import dayjs from 'dayjs';
 import TodoEditorDrawer from './TodoEditorDrawer';
-export default function TodoPage() {
-  const { todoList, loadTodoList } = useTodoContext();
+import { TodoAllProvider } from './context';
+import { useTodoAllContext } from './context';
+
+function TodoAll() {
+  const { todoList, getTodoList } = useTodoAllContext();
 
   useEffect(() => {
-    loadTodoList();
+    async function initData() {
+      await getTodoList();
+    }
+    initData();
   }, []);
 
   const [currentTodo, setCurrentTodo] = useState<Todo | null>(null);
@@ -28,7 +34,11 @@ export default function TodoPage() {
       render: (_, record) => {
         switch (record.status) {
           case 'done':
-            return <div className="text-success">已完成({record.doneAt})</div>;
+            return (
+              <div className="text-success">
+                已完成({dayjs(record.doneAt).format('YYYY-MM-DD HH:mm')})
+              </div>
+            );
           case 'todo':
             return <div className="text-warning">未完成</div>;
           case 'abandoned':
@@ -40,19 +50,31 @@ export default function TodoPage() {
         }
       },
     },
-    { title: '计划日期', dataIndex: 'planDate', key: 'planDate' },
+    {
+      title: '计划日期',
+      key: 'planDate',
+      render: (_, record) => (
+        <div>
+          {dayjs(record.planDate).format('YYYY-MM-DD')}
+          {record.planStart &&
+            record.planEnd &&
+            `${dayjs(record.planStart).format('YYYY-MM-DD')}
+             - ${dayjs(record.planEnd).format('YYYY-MM-DD')}`}
+        </div>
+      ),
+    },
     {
       title: '紧急程度',
       key: 'urgency',
       render: (_, record) => (
-        <div>{URGENCY_MAP.get(record.urgency)?.label}</div>
+        <div>{URGENCY_MAP.get(record.urgency)?.label || '--'}</div>
       ),
     },
     {
       title: '重要程度',
       key: 'importance',
       render: (_, record) => (
-        <div>{IMPORTANCE_MAP.get(record.importance)?.label}</div>
+        <div>{IMPORTANCE_MAP.get(record.importance)?.label || '--'}</div>
       ),
     },
     { title: '标签', dataIndex: 'tags', key: 'tags' },
@@ -78,7 +100,7 @@ export default function TodoPage() {
                 content: '删除后将无法恢复',
                 onOk: () => {
                   TodoService.deleteTodo(record.id);
-                  loadTodoList();
+                  getTodoList();
                 },
               })
             }
@@ -125,9 +147,17 @@ export default function TodoPage() {
         }}
         onChange={async () => {
           setDrawerVisible(false);
-          await loadTodoList();
+          await getTodoList();
         }}
       />
     </>
+  );
+}
+
+export default function TodoAllLayout() {
+  return (
+    <TodoAllProvider>
+      <TodoAll></TodoAll>
+    </TodoAllProvider>
   );
 }

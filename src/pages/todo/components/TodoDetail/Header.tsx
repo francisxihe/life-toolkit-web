@@ -2,7 +2,7 @@ import { Divider, Button } from '@arco-design/web-react';
 import { IconClose } from '@arco-design/web-react/icon';
 import dayjs from 'dayjs';
 import FlexibleContainer from '@/components/FlexibleContainer';
-import DoneTodoCheckbox from '../DoneTodoCheckbox';
+import DoneTodoCheckbox from '../TodoList/DoneTodoCheckbox';
 import DateTimeTool from '../AddTodo/DateTimeTool';
 import { useTodoDetailContext } from './context';
 import IconSelector from '../IconSelector';

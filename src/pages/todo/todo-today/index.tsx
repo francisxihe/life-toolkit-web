@@ -49,6 +49,10 @@ export default function TodoToday() {
       abandonedDateEnd: tomorrow,
     });
     setTodayAbandonedTodoList(abandonedTodos);
+
+    if (currentTodo) {
+      showTodoDetail(currentTodo);
+    }
   }
 
   useEffect(() => {
@@ -100,8 +104,12 @@ export default function TodoToday() {
               >
                 <TodoList
                   todoList={expiredTodoList}
-                  onClickTodo={showTodoDetail}
-                  refreshTodoList={refreshData}
+                  onClickTodo={async (todo) => {
+                    await showTodoDetail(todo);
+                  }}
+                  refreshTodoList={async () => {
+                    await refreshData();
+                  }}
                 />
               </Collapse.Item>
             )}
@@ -113,8 +121,12 @@ export default function TodoToday() {
               >
                 <TodoList
                   todoList={todayTodoList}
-                  onClickTodo={showTodoDetail}
-                  refreshTodoList={refreshData}
+                  onClickTodo={async (todo) => {
+                    await showTodoDetail(todo);
+                  }}
+                  refreshTodoList={async () => {
+                    await refreshData();
+                  }}
                 />
               </Collapse.Item>
             )}
@@ -126,8 +138,12 @@ export default function TodoToday() {
               >
                 <TodoList
                   todoList={todayDoneTodoList}
-                  onClickTodo={showTodoDetail}
-                  refreshTodoList={refreshData}
+                  onClickTodo={async (todo) => {
+                    await showTodoDetail(todo);
+                  }}
+                  refreshTodoList={async () => {
+                    await refreshData();
+                  }}
                 />
               </Collapse.Item>
             )}
@@ -139,8 +155,12 @@ export default function TodoToday() {
               >
                 <TodoList
                   todoList={todayAbandonedTodoList}
-                  onClickTodo={showTodoDetail}
-                  refreshTodoList={refreshData}
+                  onClickTodo={async (todo) => {
+                    await showTodoDetail(todo);
+                  }}
+                  refreshTodoList={async () => {
+                    await refreshData();
+                  }}
                 />
               </Collapse.Item>
             )}
