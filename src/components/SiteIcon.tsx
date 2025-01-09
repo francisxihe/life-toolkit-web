@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function CustomIcon({
+export default function SiteIcon({
   id,
   width = 16,
   height = 16,

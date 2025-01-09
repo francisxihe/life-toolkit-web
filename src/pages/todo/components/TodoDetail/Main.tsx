@@ -2,7 +2,7 @@ import { Input, Button, Popover } from '@arco-design/web-react';
 import { useTodoDetailContext } from './context';
 import TodoService from '../../service/api';
 import TodoList from '../TodoList';
-import CustomIcon from '@/components/Icon';
+import SiteIcon from '@/components/SiteIcon';
 import AddTodo from '../AddTodo';
 import { useState } from 'react';
 import { SubTodoFormData } from '../../types';
@@ -116,7 +116,7 @@ export default function TodoDetailMain() {
           }}
         >
           <div className="flex items-center gap-1">
-            <CustomIcon id="add" />
+            <SiteIcon id="add" />
             添加子待办
           </div>
         </Button>

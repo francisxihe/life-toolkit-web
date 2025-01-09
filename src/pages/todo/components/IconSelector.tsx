@@ -1,4 +1,4 @@
-import CustomIcon from '@/components/Icon';
+import SiteIcon from '@/components/SiteIcon';
 import { Popover, Tooltip } from '@arco-design/web-react';
 
 export default function IconSelector(props: {
@@ -26,7 +26,7 @@ export default function IconSelector(props: {
                     onChange(key);
                   }}
                 >
-                  <CustomIcon
+                  <SiteIcon
                     width={16}
                     height={16}
                     id={iconName}
@@ -51,7 +51,7 @@ export default function IconSelector(props: {
             readonly ? 'w-4 h-4' : 'w-7 h-7 cursor-pointer hover:bg-fill-3'
           }`}
         >
-          <CustomIcon
+          <SiteIcon
             width={16}
             height={16}
             id={iconName}

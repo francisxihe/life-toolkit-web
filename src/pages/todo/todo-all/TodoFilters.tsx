@@ -1,56 +1,29 @@
 'use client';
 
 import { useCallback } from 'react';
-import { Input, Select, Button, Space, Grid } from '@arco-design/web-react';
+import {
+  Input,
+  Select,
+  Button,
+  Space,
+  Grid,
+  DatePicker,
+} from '@arco-design/web-react';
 import { IconSearch } from '@arco-design/web-react/icon';
 import { IMPORTANCE_MAP, URGENCY_MAP } from '../constants';
 import { TagInput } from '../components/TagInput';
-import type { TodoFilters } from '../service/types';
-import { useState } from 'react';
+import type { TodoFilters } from '../types';
 import { useTodoAllContext } from './context';
+
+const DatePickerRange = DatePicker.RangePicker;
 const { Row, Col } = Grid;
 
 export function TodoFilters() {
   const { getTodoList, filters, setFilters } = useTodoAllContext();
 
-  const handleSearchChange = useCallback(
-    (value: string) => {
-      setFilters((prev: TodoFilters) => ({ ...prev, search: value }));
-    },
-    [setFilters]
-  );
-
-  const handleImportanceChange = useCallback(
-    (value: TodoFilters['importance']) => {
-      setFilters((prev: TodoFilters) => ({ ...prev, importance: value }));
-    },
-    [setFilters]
-  );
-
-  const handleUrgencyChange = useCallback(
-    (value: TodoFilters['urgency']) => {
-      setFilters((prev: TodoFilters) => ({ ...prev, urgency: value }));
-    },
-    [setFilters]
-  );
-
-  const handleStatusChange = useCallback(
-    (value: TodoFilters['status']) => {
-      setFilters((prev: TodoFilters) => ({ ...prev, status: value }));
-    },
-    [setFilters]
-  );
-
-  const handleTagsChange = useCallback(
-    (tags: string[]) => {
-      setFilters((prev: TodoFilters) => ({ ...prev, tags }));
-    },
-    [setFilters]
-  );
-
   const clearFilters = useCallback(() => {
     setFilters({
-      search: '',
+      keyword: '',
       importance: undefined,
       urgency: undefined,
       status: undefined,
@@ -59,22 +32,45 @@ export function TodoFilters() {
   }, [setFilters]);
 
   return (
-    <Space className="w-full my-4" direction="vertical" size="large">
+    <Space className="w-full my-3" direction="vertical" size="large">
       <Row gutter={[16, 16]}>
         <Col flex="auto" span={6}>
           <Input
             prefix={<IconSearch />}
-            placeholder="Search tasks..."
-            value={filters.search}
-            onChange={handleSearchChange}
+            placeholder="关键字"
+            value={filters.keyword}
+            onChange={(value) => {
+              setFilters((prev: TodoFilters) => ({
+                ...prev,
+                keyword: value,
+              }));
+            }}
+          />
+        </Col>
+        <Col flex="auto" span={12}>
+          <DatePickerRange
+            placeholder={['计划开始日期', '计划结束日期']}
+            value={[filters.planDateStart, filters.planDateEnd]}
+            onChange={(value) => {
+              setFilters((prev: TodoFilters) => ({
+                ...prev,
+                planDateStart: value[0],
+                planDateEnd: value[1],
+              }));
+            }}
           />
         </Col>
         <Col span={6}>
           <Select
             value={filters.importance}
-            onChange={handleImportanceChange}
+            onChange={(value) => {
+              setFilters((prev: TodoFilters) => ({
+                ...prev,
+                importance: value,
+              }));
+            }}
             allowClear
-            placeholder="All Importance"
+            placeholder="重要程度"
           >
             {[...Array.from(IMPORTANCE_MAP.entries())].map(
               ([key, { label }]) => (
@@ -88,9 +84,14 @@ export function TodoFilters() {
         <Col span={6}>
           <Select
             value={filters.urgency}
-            onChange={handleUrgencyChange}
+            onChange={(value) => {
+              setFilters((prev: TodoFilters) => ({
+                ...prev,
+                urgency: value,
+              }));
+            }}
             allowClear
-            placeholder="All Urgency"
+            placeholder="紧急程度"
           >
             {[...Array.from(URGENCY_MAP.entries())].map(([key, { label }]) => (
               <Select.Option key={key} value={key}>
@@ -102,31 +103,44 @@ export function TodoFilters() {
         <Col span={6}>
           <Select
             value={filters.status}
-            onChange={handleStatusChange}
+            onChange={(value) => {
+              setFilters((prev: TodoFilters) => ({
+                ...prev,
+                status: value,
+              }));
+            }}
             allowClear
-            placeholder="All Status"
+            placeholder="待办状态"
           >
-            <Select.Option value="pending">Pending</Select.Option>
-            <Select.Option value="completed">Completed</Select.Option>
+            <Select.Option value="todo">未完成</Select.Option>
+            <Select.Option value="done">已完成</Select.Option>
+            <Select.Option value="abandoned">已放弃</Select.Option>
           </Select>
         </Col>
         <Col span={6}>
           <TagInput
             value={filters.tags}
-            onChange={handleTagsChange}
-            placeholder="Add tags to filter..."
+            onChange={(value) => {
+              setFilters((prev: TodoFilters) => ({
+                ...prev,
+                tags: value,
+              }));
+            }}
+            placeholder="标签"
           />
         </Col>
-        <Col span={6}>
-          <Button onClick={clearFilters}>清除</Button>
-          <Button
-            type="primary"
-            onClick={() => {
-              getTodoList();
-            }}
-          >
-            查询
-          </Button>
+        <Col span={6} className="">
+          <div className="flex justify-end gap-2">
+            <Button onClick={clearFilters}>重置</Button>
+            <Button
+              type="primary"
+              onClick={() => {
+                getTodoList();
+              }}
+            >
+              查询
+            </Button>
+          </div>
         </Col>
       </Row>
     </Space>

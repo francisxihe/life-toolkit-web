@@ -16,7 +16,7 @@ import FlexibleContainer from '@/components/FlexibleContainer';
 import { URGENCY_MAP, IMPORTANCE_MAP } from '../../constants';
 import IconSelector from '../IconSelector';
 import DoneTodoCheckbox from './DoneTodoCheckbox';
-import CustomIcon from '@/components/Icon';
+import SiteIcon from '@/components/SiteIcon';
 import TodoService from '../../service/api';
 
 const { Text, Paragraph } = Typography;
@@ -76,7 +76,7 @@ function TodoList(props: {
                       iconOnly
                       type="text"
                       size="mini"
-                      icon={<CustomIcon id="more-for-task" />}
+                      icon={<SiteIcon id="more-for-task" />}
                     />
                   </Popover>
                 </div>

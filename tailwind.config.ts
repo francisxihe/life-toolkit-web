@@ -110,9 +110,9 @@ const config: Config = {
         'title-3': '24px',
       },
       borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
+        lg: 'var(--border-radius-large)',
+        md: 'var(--border-radius-medium)',
+        sm: 'var(--border-radius-small)',
       },
       keyframes: {
         'accordion-down': {

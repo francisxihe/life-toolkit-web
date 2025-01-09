@@ -1,4 +1,4 @@
-import { Todo } from './service/types';
+import { Todo, GetTodoListParams } from './service/types';
 
 export type TodoFormData = {
   name: string;
@@ -23,3 +23,17 @@ export type SubTodoFormData = {
   planTimeRange?: [string, string];
   subTodoList: SubTodoFormData[];
 };
+
+export interface TodoFilters {
+  keyword: string;
+  importance: GetTodoListParams['importance'];
+  urgency: GetTodoListParams['urgency'];
+  planDateStart?: string;
+  planDateEnd?: string;
+  status?: Todo['status'];
+  doneDateStart?: string;
+  doneDateEnd?: string;
+  abandonedDateStart?: string;
+  abandonedDateEnd?: string;
+  tags?: string[];
+}

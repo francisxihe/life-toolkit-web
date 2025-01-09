@@ -80,8 +80,26 @@ export default class TodoService {
         );
     }
 
+    if (params.keyword) {
+      todoList = todoList.filter(
+        (todo) =>
+          todo.name.includes(params.keyword) ||
+          todo.description?.includes(params.keyword)
+      );
+    }
+
     if (params.status) {
       todoList = todoList.filter((todo) => todo.status === params.status);
+    }
+
+    if (params.importance) {
+      todoList = todoList.filter(
+        (todo) => todo.importance === params.importance
+      );
+    }
+
+    if (params.urgency) {
+      todoList = todoList.filter((todo) => todo.urgency === params.urgency);
     }
 
     return todoList;

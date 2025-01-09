@@ -3,7 +3,7 @@
 import { Input, Select, Popover } from '@arco-design/web-react';
 import { IMPORTANCE_MAP, URGENCY_MAP } from '../../constants';
 import { useState, useEffect } from 'react';
-import CustomIcon from '@/components/Icon';
+import SiteIcon from '@/components/SiteIcon';
 import IconSelector from '../IconSelector';
 const TextArea = Input.TextArea;
 import DateTimeTool from './DateTimeTool';
@@ -108,7 +108,7 @@ export default function AddTodo(props: {
           trigger="click"
         >
           <div className="px-1.5 h-7 rounded-sm hover:bg-fill-3 flex items-center cursor-pointer">
-            <CustomIcon
+            <SiteIcon
               id="description"
               width={16}
               height={16}
@@ -136,7 +136,7 @@ export default function AddTodo(props: {
           trigger="click"
         >
           <div className="px-1.5 h-7 rounded-sm hover:bg-fill-3 flex items-center cursor-pointer">
-            <CustomIcon
+            <SiteIcon
               id="tag"
               width={16}
               height={16}

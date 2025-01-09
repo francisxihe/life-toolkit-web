@@ -2,7 +2,7 @@ import { Popover, Calendar, Select, TimePicker } from '@arco-design/web-react';
 import { IconLeft, IconRight } from '@arco-design/web-react/icon';
 import dayjs, { Dayjs } from 'dayjs';
 import { RECURRENCE_PATTERNS } from '../../constants';
-import CustomIcon from '@/components/Icon';
+import SiteIcon from '@/components/SiteIcon';
 import { useState } from 'react';
 import 'dayjs/locale/zh-cn';
 
@@ -157,7 +157,7 @@ export default function DateTimeTool(props: {
       }
     >
       <div className="px-1.5 h-7 rounded-sm hover:bg-fill-3 flex items-center gap-2 cursor-pointer">
-        <CustomIcon
+        <SiteIcon
           width={16}
           height={16}
           id={`today-icon-${formData.date.format('D')}`}

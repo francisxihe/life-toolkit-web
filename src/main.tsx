@@ -7,7 +7,6 @@ import zhCN from '@arco-design/web-react/es/locale/zh-CN';
 import enUS from '@arco-design/web-react/es/locale/en-US';
 import './style/global.less';
 import { HashRouter } from 'react-router-dom';
-import axios from 'axios';
 import rootReducer from './store';
 import { GlobalContext } from './context';
 import checkLogin from './utils/checkLogin';
@@ -16,7 +15,6 @@ import useStorage from './utils/useStorage';
 import './mock';
 import Router from './router';
 import { generatePermission } from './router/routes';
-import CustomIcon from './components/Icon';
 const store = createStore(rootReducer);
 
 function Index() {

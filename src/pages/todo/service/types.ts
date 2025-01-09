@@ -1,14 +1,9 @@
-export interface TodoFilters {
-  search: string;
-  importance: number | null;
-  urgency: number | null;
-  status: Todo['status'];
-  tags: string[];
-}
-
 export interface GetTodoListParams {
+  keyword?: string;
   planDateStart?: string;
   planDateEnd?: string;
+  importance?: Todo['importance'];
+  urgency?: Todo['urgency'];
   status?: Todo['status'];
   doneDateStart?: string;
   doneDateEnd?: string;

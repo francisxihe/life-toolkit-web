@@ -11,6 +11,7 @@ import dayjs from 'dayjs';
 import TodoEditorDrawer from './TodoEditorDrawer';
 import { TodoAllProvider } from './context';
 import { useTodoAllContext } from './context';
+import SiteIcon from '@/components/SiteIcon';
 
 function TodoAll() {
   const { todoList, getTodoList } = useTodoAllContext();
@@ -125,8 +126,13 @@ function TodoAll() {
           <TodoFilters />
         </FlexibleContainer.Fixed>
 
-        <FlexibleContainer.Fixed className="px-5 flex">
-          <Button type="primary">新建</Button>
+        <FlexibleContainer.Fixed className="px-5 flex my-3">
+          <Button type="primary">
+            <div className="flex items-center gap-2">
+              <SiteIcon id="add" width={14} height={14} />
+              新建
+            </div>
+          </Button>
         </FlexibleContainer.Fixed>
 
         <FlexibleContainer.Shrink className="px-5 w-full h-full flex">
