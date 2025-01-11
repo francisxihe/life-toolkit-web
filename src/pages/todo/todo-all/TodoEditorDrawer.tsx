@@ -7,27 +7,21 @@ export default function TodoEditorDrawer(props: {
   todo: Todo;
   visible: boolean;
   onCancel: () => Promise<void>;
-  onChange: () => Promise<void>;
 }) {
   return (
     <Drawer
-      title="编辑"
+      unmountOnExit
+      title={`编辑`}
       visible={props.visible}
       width={500}
-      onCancel={() => {
-        props.onCancel();
-      }}
-      onOk={() => {
-        props.onChange();
-      }}
+      onCancel={props.onCancel}
+      footer={null}
     >
       <TodoDetail
         todo={props.todo}
-        onClose={() => {
-          return props.onCancel();
-        }}
-        onChange={() => {
-          return props.onChange();
+        onClose={null}
+        onChange={async () => {
+          console.log('onChange');
         }}
       />
     </Drawer>

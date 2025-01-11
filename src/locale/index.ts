@@ -59,8 +59,10 @@ const i18n = {
     'navbar.search.placeholder': 'Please search',
     'menu.todo': 'Todo',
     'menu.todo.today': 'Today Todo',
+    'menu.todo.week': 'Week Todo',
     'menu.todo.all': 'All Todo',
-    'menu.todo.history': 'History Todo',
+    'menu.todo.dashboard': 'Dashboard',
+    'menu.todo.calendar': 'Calendar',
   },
   'zh-CN': {
     'menu.dashboard': '仪表盘',
@@ -121,8 +123,10 @@ const i18n = {
     'navbar.search.placeholder': '输入内容查询',
     'menu.todo': '待办事项',
     'menu.todo.today': '今日待办',
+    'menu.todo.week': '本周待办',
     'menu.todo.all': '全部待办',
-    'menu.todo.history': '历史待办',
+    'menu.todo.dashboard': '待办统计',
+    'menu.todo.calendar': '待办日历',
   },
 };
 

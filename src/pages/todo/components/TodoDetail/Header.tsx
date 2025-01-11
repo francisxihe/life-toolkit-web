@@ -10,7 +10,7 @@ import { IMPORTANCE_MAP, URGENCY_MAP } from '../../constants';
 import TodoService from '../../service/api';
 
 export default function TodoDetailHeader() {
-  const { todoFormData, setTodoFormData, onCancel } = useTodoDetailContext();
+  const { todoFormData, setTodoFormData, onClose } = useTodoDetailContext();
 
   return todoFormData ? (
     <FlexibleContainer
@@ -57,12 +57,14 @@ export default function TodoDetailHeader() {
         />
       </FlexibleContainer.Shrink>
       <FlexibleContainer.Fixed className="flex items-center">
-        <Button
-          type="text"
-          size="small"
-          icon={<IconClose className="!text-text-3" />}
-          onClick={() => onCancel()}
-        />
+        {onClose ? (
+          <Button
+            type="text"
+            size="small"
+            icon={<IconClose className="!text-text-3" />}
+            onClick={() => onClose()}
+          />
+        ) : null}
       </FlexibleContainer.Fixed>
     </FlexibleContainer>
   ) : (

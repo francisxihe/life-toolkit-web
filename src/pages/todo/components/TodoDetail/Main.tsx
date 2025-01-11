@@ -4,8 +4,8 @@ import TodoService from '../../service/api';
 import TodoList from '../TodoList';
 import SiteIcon from '@/components/SiteIcon';
 import AddTodo from '../AddTodo';
-import { useState } from 'react';
-import { SubTodoFormData } from '../../types';
+import { useState, useCallback } from 'react';
+import { SubTodoFormData, TodoFormData } from '../../types';
 
 const TextArea = Input.TextArea;
 
@@ -21,6 +21,27 @@ export default function TodoDetailMain() {
   const [subTodoFormData, setSubTodoFormData] =
     useState<SubTodoFormData | null>(null);
   const [addSubTodoVisible, setAddSubTodoVisible] = useState<boolean>(false);
+
+  const onChangeSubTodo = useCallback(
+    (todoFormData: TodoFormData) => {
+      setSubTodoFormData(todoFormData);
+    },
+    [setSubTodoFormData]
+  );
+
+  const onClickSubmitSubTodo = useCallback(async () => {
+    await TodoService.addSubTodo(todoNode.id, {
+      name: subTodoFormData.name,
+      importance: subTodoFormData.importance,
+      urgency: subTodoFormData.urgency,
+      planStartAt: subTodoFormData.planTimeRange?.[0] || undefined,
+      planEndAt: subTodoFormData.planTimeRange?.[1] || undefined,
+      tags: subTodoFormData.tags,
+    });
+
+    await refreshTodoFormData(todoNode);
+    setAddSubTodoVisible(false);
+  }, [subTodoFormData, todoNode, refreshTodoFormData]);
 
   return todoFormData ? (
     <>
@@ -68,10 +89,8 @@ export default function TodoDetailMain() {
           <div>
             <AddTodo
               hiddenDate
-              onChange={async (todoFormData) => {
-                console.log(todoFormData);
-                setSubTodoFormData(todoFormData);
-              }}
+              onChange={onChangeSubTodo}
+              onSubmit={onClickSubmitSubTodo}
             />
             <div className="flex items-center justify-end mt-2">
               <Button
@@ -84,24 +103,7 @@ export default function TodoDetailMain() {
               >
                 取消
               </Button>
-              <Button
-                type="text"
-                size="small"
-                onClick={async () => {
-                  await TodoService.addSubTodo(todoNode.id, {
-                    name: subTodoFormData.name,
-                    importance: subTodoFormData.importance,
-                    urgency: subTodoFormData.urgency,
-                    planStartAt:
-                      subTodoFormData.planTimeRange?.[0] || undefined,
-                    planEndAt: subTodoFormData.planTimeRange?.[1] || undefined,
-                    tags: subTodoFormData.tags,
-                  });
-
-                  await refreshTodoFormData(todoNode);
-                  setAddSubTodoVisible(false);
-                }}
-              >
+              <Button type="text" size="small" onClick={onClickSubmitSubTodo}>
                 添加
               </Button>
             </div>

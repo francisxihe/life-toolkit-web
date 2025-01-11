@@ -17,7 +17,7 @@ interface TodoDetailContextType {
   todoNode: TodoNode;
   todoFormData: TodoFormData;
   setTodoFormData: Dispatch<React.SetStateAction<TodoFormData>>;
-  onCancel: () => Promise<void>;
+  onClose: () => Promise<void> | null;
   onChange: (todo: TodoFormData) => Promise<void>;
   refreshTodoFormData: (todo: Todo) => Promise<void>;
   initTodoFormData: (todo: Todo) => Promise<void>;
@@ -30,7 +30,7 @@ const TodoDetailContext = createContext<TodoDetailContextType | undefined>(
 export function TodoDetailProvider(props: {
   children: React.ReactNode;
   todo: Todo;
-  onClose: () => Promise<void>;
+  onClose: () => Promise<void> | null;
   onChange: (todo: Todo) => Promise<void>;
 }) {
   function transformTodo(todo: TodoNode): TodoFormData {
@@ -88,9 +88,12 @@ export function TodoDetailProvider(props: {
     initTodoFormData();
   }, [initTodoFormData]);
 
-  async function onCancel() {
-    setTodoFormData(null);
-    await props.onClose();
+  let onClose = null;
+  if (props.onClose) {
+    onClose = async () => {
+      setTodoFormData(null);
+      await props.onClose();
+    };
   }
 
   async function onChange(todoFormData: TodoFormData) {
@@ -106,7 +109,7 @@ export function TodoDetailProvider(props: {
         todoNode,
         todoFormData,
         setTodoFormData,
-        onCancel,
+        onClose,
         onChange,
         refreshTodoFormData,
         initTodoFormData,

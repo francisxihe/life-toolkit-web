@@ -1,6 +1,5 @@
 'use client';
 
-import { useCallback } from 'react';
 import {
   Input,
   Select,
@@ -19,17 +18,8 @@ const DatePickerRange = DatePicker.RangePicker;
 const { Row, Col } = Grid;
 
 export function TodoFilters() {
-  const { getTodoList, filters, setFilters } = useTodoAllContext();
-
-  const clearFilters = useCallback(() => {
-    setFilters({
-      keyword: '',
-      importance: undefined,
-      urgency: undefined,
-      status: undefined,
-      tags: [],
-    });
-  }, [setFilters]);
+  const { getTodoList, filters, setFilters, clearFilters } =
+    useTodoAllContext();
 
   return (
     <Space className="w-full my-3" direction="vertical" size="large">
@@ -131,11 +121,17 @@ export function TodoFilters() {
         </Col>
         <Col span={6} className="">
           <div className="flex justify-end gap-2">
-            <Button onClick={clearFilters}>重置</Button>
+            <Button
+              onClick={async () => {
+                clearFilters();
+              }}
+            >
+              重置
+            </Button>
             <Button
               type="primary"
-              onClick={() => {
-                getTodoList();
+              onClick={async () => {
+                await getTodoList();
               }}
             >
               查询

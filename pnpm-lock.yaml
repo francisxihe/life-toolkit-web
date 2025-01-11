@@ -79,6 +79,9 @@ importers:
       react-dom:
         specifier: ^17.0.2
         version: 17.0.2(react@17.0.2)
+      react-hook-form:
+        specifier: ^7.54.2
+        version: 7.54.2(react@17.0.2)
       react-redux:
         specifier: ^7.2.6
         version: 7.2.9(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
@@ -6274,6 +6277,15 @@ packages:
       '@types/react':
         optional: true
 
+  react-hook-form@7.54.2:
+    resolution:
+      {
+        integrity: sha512-eHpAUgUjWbZocoQYUHposymRb4ZP6d0uwUnooL2uOybA9/3tPUvoAKqEWK1WaSiTxxOfTpffNZP7QwlnM3/gEg==,
+      }
+    engines: { node: '>=18.0.0' }
+    peerDependencies:
+      react: ^16.8.0 || ^17 || ^18 || ^19
+
   react-is@16.13.1:
     resolution:
       {
@@ -12148,6 +12160,10 @@ snapshots:
       use-sidecar: 1.1.2(@types/react@17.0.83)(react@17.0.2)
     optionalDependencies:
       '@types/react': 17.0.83
+
+  react-hook-form@7.54.2(react@17.0.2):
+    dependencies:
+      react: 17.0.2
 
   react-is@16.13.1: {}
 
