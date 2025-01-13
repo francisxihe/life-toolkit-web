@@ -1,15 +1,9 @@
 import React from 'react';
 import { Search, X } from 'lucide-react';
+import { useCalendarContext } from './context';
 
-interface SearchBarProps {
-  searchQuery: string;
-  setSearchQuery: (query: string) => void;
-}
-
-export default function SearchBar({
-  searchQuery,
-  setSearchQuery,
-}: SearchBarProps) {
+export default function SearchBar() {
+  const { searchQuery, setSearchQuery } = useCalendarContext();
   return (
     <div className="px-6 py-3 border-b border-gray-100">
       <div className="relative">

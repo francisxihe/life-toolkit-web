@@ -1,10 +1,12 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext } from 'react';
 
-export function createInjectState<T>(initializer: () => T) {
+export function createInjectState<T>(
+  initializer: (props) => T
+): [React.FC, () => T] {
   const Context = createContext<T | null>(null);
 
-  const Provider = ({ children }) => {
-    const contextValue = initializer();
+  const Provider = ({ children, ...props }) => {
+    const contextValue = initializer(props);
     return <Context.Provider value={contextValue}>{children}</Context.Provider>;
   };
 
@@ -16,5 +18,5 @@ export function createInjectState<T>(initializer: () => T) {
     return context;
   };
 
-  return { Provider, useInjectState };
+  return [Provider, useInjectState];
 }

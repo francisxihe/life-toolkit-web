@@ -1,27 +1,22 @@
-import React from 'react';
 import { format } from 'date-fns';
 import { ChevronLeft, ChevronRight, Plus, Rss } from 'lucide-react';
+import { useCalendarContext } from './Context';
 
-interface CalendarHeaderProps {
-  currentDate: Date;
-  onPrevMonth: () => void;
-  onNextMonth: () => void;
-  onNewEvent: () => void;
-  calendarUrl: string;
-}
+export default function CalendarHeader() {
+  const {
+    currentDate,
+    onPrevMonth,
+    onNextMonth,
+    getCalendarUrl,
+    setModalMode,
+    setIsModalOpen,
+  } = useCalendarContext();
 
-export default function CalendarHeader({
-  currentDate,
-  onPrevMonth,
-  onNextMonth,
-  onNewEvent,
-  calendarUrl,
-}: CalendarHeaderProps) {
   return (
     <div className="flex items-center justify-between p-6 border-b border-gray-100">
       <div className="flex items-center space-x-4">
         <h1 className="text-2xl font-semibold text-gray-900">
-          {format(currentDate, 'MMMM yyyy')}
+          {currentDate ? format(currentDate, 'MMMM yyyy') : 'Loading...'}
         </h1>
         <div className="flex items-center space-x-2">
           <button
@@ -40,7 +35,7 @@ export default function CalendarHeader({
       </div>
       <div className="flex items-center space-x-3">
         <a
-          href={calendarUrl}
+          href={getCalendarUrl?.()}
           className="flex items-center space-x-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full transition-colors"
           title="Subscribe to Calendar"
         >
@@ -48,7 +43,10 @@ export default function CalendarHeader({
           <span>Subscribe</span>
         </a>
         <button
-          onClick={onNewEvent}
+          onClick={() => {
+            setModalMode('create');
+            setIsModalOpen(true);
+          }}
           className="flex items-center space-x-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full transition-colors"
         >
           <Plus className="w-4 h-4" />

@@ -69,7 +69,7 @@ export default function TodoToday() {
   }
 
   return (
-    <FlexibleContainer className="bg-background-2 rounded-lg w-full h-full">
+    <FlexibleContainer className="bg-bg-2 rounded-lg w-full h-full">
       <FlexibleContainer.Fixed className="px-5 py-2 flex justify-between items-center border-b">
         <div className="text-text-1 text-title-2 font-[500] py-1">今日待办</div>
       </FlexibleContainer.Fixed>

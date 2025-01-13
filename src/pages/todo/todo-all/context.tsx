@@ -33,21 +33,40 @@ function useSyncState<T>(
   return [state, setSyncState, stateRef];
 }
 
-export const { Provider: TodoAllProvider, useInjectState: useTodoAllContext } =
-  createInjectState<{
-    todoList: Todo[];
-    getTodoList: () => Promise<void>;
-    filters: TodoFilters;
-    setFilters: Dispatch<SetStateAction<TodoFilters>>;
-    clearFilters: () => Promise<void>;
-  }>(() => {
-    const [todoList, setTodoList] = useState<Todo[]>([]);
+export const [TodoAllProvider, useTodoAllContext] = createInjectState<{
+  todoList: Todo[];
+  getTodoList: () => Promise<void>;
+  filters: TodoFilters;
+  setFilters: Dispatch<SetStateAction<TodoFilters>>;
+  clearFilters: () => Promise<void>;
+}>(() => {
+  const [todoList, setTodoList] = useState<Todo[]>([]);
 
-    const [filters, setFilters, filtersRef] = useSyncState<TodoFilters>({
+  const [filters, setFilters, filtersRef] = useSyncState<TodoFilters>({
+    keyword: '',
+    importance: undefined,
+    urgency: undefined,
+    status: 'todo',
+    planDateStart: undefined,
+    planDateEnd: undefined,
+    doneDateStart: undefined,
+    doneDateEnd: undefined,
+    abandonedDateStart: undefined,
+    abandonedDateEnd: undefined,
+    tags: [],
+  });
+
+  async function getTodoList() {
+    const todoList = await TodoService.getTodoList(filtersRef.current);
+    setTodoList(todoList);
+  }
+
+  const clearFilters = async () => {
+    setFilters({
       keyword: '',
       importance: undefined,
       urgency: undefined,
-      status: 'todo',
+      status: undefined,
       planDateStart: undefined,
       planDateEnd: undefined,
       doneDateStart: undefined,
@@ -56,28 +75,8 @@ export const { Provider: TodoAllProvider, useInjectState: useTodoAllContext } =
       abandonedDateEnd: undefined,
       tags: [],
     });
+    await getTodoList();
+  };
 
-    async function getTodoList() {
-      const todoList = await TodoService.getTodoList(filtersRef.current);
-      setTodoList(todoList);
-    }
-
-    const clearFilters = async () => {
-      setFilters({
-        keyword: '',
-        importance: undefined,
-        urgency: undefined,
-        status: undefined,
-        planDateStart: undefined,
-        planDateEnd: undefined,
-        doneDateStart: undefined,
-        doneDateEnd: undefined,
-        abandonedDateStart: undefined,
-        abandonedDateEnd: undefined,
-        tags: [],
-      });
-      await getTodoList();
-    };
-
-    return { todoList, getTodoList, filters, setFilters, clearFilters };
-  });
+  return { todoList, getTodoList, filters, setFilters, clearFilters };
+});

@@ -29,7 +29,7 @@ function TodoList(props: {
   return (
     <div className="w-full mt-[-8px]">
       {props.todoList.map((todo) => (
-        <div className={'w-full pl-4 py-2 bg-background'} key={todo.id}>
+        <div className={'w-full pl-4 py-2 bg-bg'} key={todo.id}>
           <FlexibleContainer direction="vertical" className="items-start">
             <FlexibleContainer.Fixed className="flex items-start ">
               <DoneTodoCheckbox

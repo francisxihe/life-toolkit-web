@@ -1,11 +1,11 @@
 import React from 'react';
-import { Event } from '../types';
+import { CalendarEvent } from './types';
 import { Clock, Calendar as CalendarIcon, Edit2, Share } from 'lucide-react';
 
 interface EventPopoverProps {
-  event: Event;
-  onEdit: (event: Event) => void;
-  onExport: (event: Event) => void;
+  event: CalendarEvent;
+  onEdit: (event: CalendarEvent) => void;
+  onExport: (event: CalendarEvent) => void;
 }
 
 export default function EventPopover({

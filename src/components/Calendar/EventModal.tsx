@@ -1,6 +1,6 @@
 import React from 'react';
 import { X, Clock, Calendar as CalendarIcon, Type } from 'lucide-react';
-import { EventFormData } from '../types';
+import { EventFormData } from './types';
 
 interface EventModalProps {
   isOpen: boolean;

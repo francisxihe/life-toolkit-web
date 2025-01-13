@@ -1,26 +1,20 @@
 import React, { useState } from 'react';
 import { format, isToday, isSameMonth } from 'date-fns';
-import { Event } from '../types';
+import { CalendarEvent } from './types';
 import EventPopover from './EventPopover';
+import { useCalendarContext } from './Context';
 
-interface CalendarGridProps {
-  days: Date[];
-  currentDate: Date;
-  events: Event[];
-  onEditEvent: (event: Event) => void;
-  onQuickAdd: (date: Date) => void;
-  onExportEvent: (event: Event) => void;
-}
-
-export default function CalendarGrid({
-  days,
-  currentDate,
-  events,
-  onEditEvent,
-  onQuickAdd,
-  onExportEvent,
-}: CalendarGridProps) {
-  const [hoveredEvent, setHoveredEvent] = useState<Event | null>(null);
+export default function CalendarGrid() {
+  const {
+    days,
+    currentDate,
+    events,
+    handleEditEvent,
+    handleQuickAdd,
+    handleExportEvent,
+    handleDeleteEvent,
+  } = useCalendarContext();
+  const [hoveredEvent, setHoveredEvent] = useState<CalendarEvent | null>(null);
   const [popoverPosition, setPopoverPosition] = useState({ x: 0, y: 0 });
 
   const colorClasses = {
@@ -34,7 +28,7 @@ export default function CalendarGrid({
     return events.filter((event) => event.date === format(date, 'yyyy-MM-dd'));
   };
 
-  const handleEventHover = (event: Event, e: React.MouseEvent) => {
+  const handleEventHover = (event: CalendarEvent, e: React.MouseEvent) => {
     const rect = e.currentTarget.getBoundingClientRect();
     setPopoverPosition({
       x: rect.left + window.scrollX,
@@ -53,10 +47,10 @@ export default function CalendarGrid({
         ))}
       </div>
       <div className="grid grid-cols-7 text-sm">
-        {days.map((day, dayIdx) => (
+        {days?.map((day, dayIdx) => (
           <div
             key={day.toString()}
-            onClick={() => onQuickAdd(day)}
+            onClick={() => handleQuickAdd(day)}
             className={`
               min-h-[8rem] p-2 border border-gray-100 relative
               ${!isSameMonth(day, currentDate) ? 'bg-gray-50' : 'bg-white'}
@@ -78,7 +72,7 @@ export default function CalendarGrid({
                   key={event.id}
                   onClick={(e) => {
                     e.stopPropagation();
-                    onEditEvent(event);
+                    handleEditEvent(event);
                   }}
                   onMouseEnter={(e) => handleEventHover(event, e)}
                   onMouseLeave={() => setHoveredEvent(null)}
@@ -104,8 +98,8 @@ export default function CalendarGrid({
         >
           <EventPopover
             event={hoveredEvent}
-            onEdit={onEditEvent}
-            onExport={onExportEvent}
+            onEdit={handleEditEvent}
+            onExport={handleExportEvent}
           />
         </div>
       )}
