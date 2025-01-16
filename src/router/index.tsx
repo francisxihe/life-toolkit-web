@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import Login from '../pages/login';
-import PageLayout from '../components/Layout/layout';
+import PageLayout from '../layout/layout';
 import lazyload from '../utils/lazyload';
 import useRouter, { FlattenRoute, RouterContext } from './useRouter';
 

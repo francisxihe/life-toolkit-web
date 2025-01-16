@@ -1,5 +1,5 @@
 import { Drawer } from '@arco-design/web-react';
-import TodoDetail from '../components/TodoDetail';
+import TodoDetail from './TodoDetail';
 import { Todo } from '../service/types';
 import { Form, Input } from '@arco-design/web-react';
 

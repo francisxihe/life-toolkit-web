@@ -78,7 +78,10 @@ const Navigate: React.FC<NavigateProps> = ({ collapsed, locale }) => {
           return (
             route.fullPath && (
               <SubMenu key={route.fullPath} title={titleDom}>
-                {travel(visibleChildren, level + 1, [...parentNode, route.name])}
+                {travel(visibleChildren, level + 1, [
+                  ...parentNode,
+                  route.name,
+                ])}
               </SubMenu>
             )
           );

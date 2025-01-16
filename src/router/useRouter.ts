@@ -1,6 +1,6 @@
 import { IRoute } from '@/router/routes';
 import lazyload from '@/utils/lazyload';
-import { isArray } from 'lodash';
+import { isArray } from 'lodash-es';
 import { useSelector } from 'react-redux';
 import { GlobalState } from '@/store';
 import useRoute from '@/router/routes';

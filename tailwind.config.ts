@@ -21,6 +21,7 @@ const config: Config = {
         lg: 'var(--border-radius-large)',
         md: 'var(--border-radius-medium)',
         sm: 'var(--border-radius-small)',
+        xs: '2px',
       },
       keyframes: {
         'accordion-down': {

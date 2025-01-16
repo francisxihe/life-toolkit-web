@@ -25,9 +25,15 @@ importers:
       '@loadable/component':
         specifier: ^5.13.2
         version: 5.16.4(react@17.0.2)
+      '@nanostores/react':
+        specifier: ^0.8.4
+        version: 0.8.4(nanostores@0.11.3)(react@17.0.2)
       '@turf/turf':
         specifier: ^6.5.0
         version: 6.5.0
+      '@types/lodash-es':
+        specifier: ^4.17.12
+        version: 4.17.12
       axios:
         specifier: ^0.24.0
         version: 0.24.0
@@ -55,7 +61,7 @@ importers:
       gh-pages:
         specifier: ^6.3.0
         version: 6.3.0
-      lodash:
+      lodash-es:
         specifier: ^4.17.21
         version: 4.17.21
       lucide-react:
@@ -64,6 +70,9 @@ importers:
       mockjs:
         specifier: ^1.1.0
         version: 1.1.0
+      nanostores:
+        specifier: ^0.11.3
+        version: 0.11.3
       nprogress:
         specifier: ^0.2.0
         version: 0.2.0
@@ -1384,6 +1393,16 @@ packages:
     peerDependencies:
       react: ^16.3.0 || ^17.0.0 || ^18.0.0
 
+  '@nanostores/react@0.8.4':
+    resolution:
+      {
+        integrity: sha512-EciHSzDXg7GmGODjegGG1VldPEinbAK+12/Uz5+MAdHmxf082Rl6eXqKFxAAu4pZAcr5dNTpv6wMfEe7XacjkQ==,
+      }
+    engines: { node: ^18.0.0 || >=20.0.0 }
+    peerDependencies:
+      nanostores: ^0.9.0 || ^0.10.0 || ^0.11.0
+      react: '>=18.0.0'
+
   '@nodelib/fs.scandir@2.1.5':
     resolution:
       {
@@ -2310,6 +2329,18 @@ packages:
     resolution:
       {
         integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==,
+      }
+
+  '@types/lodash-es@4.17.12':
+    resolution:
+      {
+        integrity: sha512-0NgftHUcV4v34VhXm8QBSftKVXtbkBG3ViCjs6+eJ5a6y6Mi/jiFGPc1sC7QK+9BFhWrURE3EOggmWaSxL9OzQ==,
+      }
+
+  '@types/lodash@4.17.14':
+    resolution:
+      {
+        integrity: sha512-jsxagdikDiDBeIRaPYtArcT8my4tN1og7MtMRquFT3XNA6axxyHDRUemqDz/taRDdOUn0GnGHRCuff4q48sW9A==,
       }
 
   '@types/minimist@1.2.5':
@@ -5614,6 +5645,13 @@ packages:
     engines: { node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1 }
     hasBin: true
 
+  nanostores@0.11.3:
+    resolution:
+      {
+        integrity: sha512-TUes3xKIX33re4QzdxwZ6tdbodjmn3tWXCEc1uokiEmo14sI1EaGYNs2k3bU2pyyGNmBqFGAVl6jAGWd06AVIg==,
+      }
+    engines: { node: ^18.0.0 || >=20.0.0 }
+
   natural-compare-lite@1.4.0:
     resolution:
       {
@@ -8763,6 +8801,11 @@ snapshots:
       react: 17.0.2
       react-is: 16.13.1
 
+  '@nanostores/react@0.8.4(nanostores@0.11.3)(react@17.0.2)':
+    dependencies:
+      nanostores: 0.11.3
+      react: 17.0.2
+
   '@nodelib/fs.scandir@2.1.5':
     dependencies:
       '@nodelib/fs.stat': 2.0.5
@@ -9759,6 +9802,12 @@ snapshots:
       hoist-non-react-statics: 3.3.2
 
   '@types/json-schema@7.0.15': {}
+
+  '@types/lodash-es@4.17.12':
+    dependencies:
+      '@types/lodash': 4.17.14
+
+  '@types/lodash@4.17.14': {}
 
   '@types/minimist@1.2.5': {}
 
@@ -11781,6 +11830,8 @@ snapshots:
       thenify-all: 1.6.0
 
   nanoid@3.3.7: {}
+
+  nanostores@0.11.3: {}
 
   natural-compare-lite@1.4.0: {}
 

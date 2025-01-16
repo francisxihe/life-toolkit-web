@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import groupBy from 'lodash/groupBy';
+import { groupBy } from 'lodash-es';
 import {
   Trigger,
   Badge,

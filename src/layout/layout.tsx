@@ -4,13 +4,14 @@ import { Layout, Breadcrumb, Spin } from '@arco-design/web-react';
 import cs from 'classnames';
 import { IconMenuFold, IconMenuUnfold } from '@arco-design/web-react/icon';
 import { useSelector } from 'react-redux';
-import Navbar from '../NavBar';
-import Footer from '../Footer';
-import useLocale from '../../utils/useLocale';
-import getUrlParams from '../../utils/getUrlParams';
-import { GlobalState } from '../../store';
+import Navbar from '../components/NavBar';
+import Footer from '../components/Footer';
+import useLocale from '../utils/useLocale';
+import getUrlParams from '../utils/getUrlParams';
+import { GlobalState } from '../store';
 import styles from './layout.module.less';
 import Navigate from './Navigate';
+import GlobalDrawer from './Drawer/GlobalDrawer';
 
 const Sider = Layout.Sider;
 const Content = Layout.Content;
@@ -103,6 +104,7 @@ function PageLayout() {
           </Layout>
         </Layout>
       )}
+      <GlobalDrawer />
     </Layout>
   );
 }
