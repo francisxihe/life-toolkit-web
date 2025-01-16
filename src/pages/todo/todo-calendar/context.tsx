@@ -4,24 +4,25 @@ import dayjs, { Dayjs } from 'dayjs';
 import ApiService from '../service/api';
 import { Todo } from '../service/types';
 
-export const [CalendarProvider, useCalendarContext] = createInjectState<{
-  todoList: Todo[];
-  searchQuery: string;
-  setSearchQuery: (query: string) => void;
-  pageShowDate: Dayjs;
-  setPageShowDate: (date: Dayjs) => void;
-  move: (date: Dayjs) => void;
-  changePageShowDate: (type: 'prev' | 'next', mode: 'month' | 'year') => void;
-  calendarMode: 'month' | 'year';
-  setCalendarMode: (mode: 'month' | 'year') => void;
-  drawerVisible: boolean;
-  setDrawerVisible: (visible: boolean) => void;
-}>((props) => {
+export const [CalendarProvider, useCalendarContext] = createInjectState<
+  {
+    todoList: Todo[];
+    searchQuery: string;
+    setSearchQuery: (query: string) => void;
+    pageShowDate: Dayjs;
+    setPageShowDate: (date: Dayjs) => void;
+    move: (date: Dayjs) => void;
+    changePageShowDate: (type: 'prev' | 'next', mode: 'month' | 'year') => void;
+    calendarMode: 'month' | 'year';
+    setCalendarMode: (mode: 'month' | 'year') => void;
+    getTodoList: () => Promise<void>;
+  },
+  Record<string, unknown>
+>((props) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [todoList, setTodoList] = useState<Todo[]>([]);
   const [pageShowDate, setPageShowDate] = useState(dayjs());
   const [calendarMode, setCalendarMode] = useState<'month' | 'year'>('month');
-  const [drawerVisible, setDrawerVisible] = useState(false);
 
   function onChangePageDate(time: Dayjs) {
     setPageShowDate(time);
@@ -42,10 +43,13 @@ export const [CalendarProvider, useCalendarContext] = createInjectState<{
     }
   }
 
+  const getTodoList = async () => {
+    const events = await ApiService.getTodoList();
+    setTodoList(events);
+  };
+
   useEffect(() => {
-    ApiService.getTodoList().then((events) => {
-      setTodoList(events);
-    });
+    getTodoList();
   }, []);
 
   return {
@@ -58,7 +62,6 @@ export const [CalendarProvider, useCalendarContext] = createInjectState<{
     changePageShowDate,
     calendarMode,
     setCalendarMode,
-    drawerVisible,
-    setDrawerVisible,
+    getTodoList,
   };
 });

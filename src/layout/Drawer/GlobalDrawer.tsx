@@ -20,18 +20,22 @@ const GlobalDrawer = () => {
   return (
     <>
       {drawerQueue.map((drawerOption, index) => {
-        const DrawerContent = drawerOption.content;
+        const { content: DrawerContent, ...restProps } = drawerOption;
         return (
           <Drawer
+            {...restProps}
             key={index}
-            {...drawerOption}
-            onOk={drawerOption.onOk}
-            onCancel={drawerOption.onCancel}
+            footer={null}
+            onCancel={() => closeDrawer(index)}
           >
             {drawerOption.visible && (
               <DrawerContent
                 param={drawerOption.param}
-                onCancel={() => closeDrawer(index)}
+                onConfirm={(data) => {
+                  drawerOption.onConfirm?.(data);
+                  closeDrawer(index);
+                }}
+                onClose={() => closeDrawer(index)}
               />
             )}
           </Drawer>

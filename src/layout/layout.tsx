@@ -11,7 +11,7 @@ import getUrlParams from '../utils/getUrlParams';
 import { GlobalState } from '../store';
 import styles from './layout.module.less';
 import Navigate from './Navigate';
-import GlobalDrawer from './Drawer/GlobalDrawer';
+import { GlobalDrawer } from './Drawer';
 
 const Sider = Layout.Sider;
 const Content = Layout.Content;

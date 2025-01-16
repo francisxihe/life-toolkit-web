@@ -12,9 +12,9 @@ export function Container(
     <div
       className={`${styles['container']} ${
         direction === 'vertical' && styles['container-vertical']
-      } ${
-        direction === 'horizontal' && styles['container-horizontal']
-      } ${className}`}
+      } ${direction === 'horizontal' && styles['container-horizontal']} ${
+        className ?? ''
+      }`}
       {...rest}
     >
       {children}
@@ -31,7 +31,9 @@ export function ContainerFixed(
   const { className, children, ...rest } = props;
   return (
     <div
-      className={`${styles['container-fixed']} container-fixed ${className}`}
+      className={`${styles['container-fixed']} container-fixed ${
+        className ?? ''
+      }`}
       {...rest}
     >
       {children}
@@ -48,7 +50,9 @@ export function ContainerShrink(
   const { className, children, ...rest } = props;
   return (
     <div
-      className={`${styles['container-shrink']} container-shrink ${className}`}
+      className={`${styles['container-shrink']} container-shrink ${
+        className ?? ''
+      }`}
       {...rest}
     >
       {children}

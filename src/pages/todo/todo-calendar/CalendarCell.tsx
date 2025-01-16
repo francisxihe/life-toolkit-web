@@ -1,13 +1,31 @@
 import dayjs, { Dayjs } from 'dayjs';
 import { useCalendarContext } from './context';
 import { Todo } from '../service/types';
+import { openDrawer } from '@/layout/Drawer';
+import TodoDetail from '../components/TodoDetail';
 
 function TodoItem({ todo }: { todo: Todo }) {
+  const { getTodoList } = useCalendarContext();
   return (
     <div
       onClick={(e) => {
         e.stopPropagation();
-        // handleEditEvent(event);
+        openDrawer({
+          title: '编辑',
+          width: 500,
+          content: () => (
+            <TodoDetail
+              todo={todo}
+              onClose={null}
+              onChange={async () => {
+                console.log('onChange');
+              }}
+            />
+          ),
+          onClose: () => {
+            getTodoList();
+          },
+        });
       }}
       className={`min-w-[200px] text-body-1 px-1.5 leading-[20px] rounded-[2px] truncate cursor-pointer ${
         todo.status === 'done'

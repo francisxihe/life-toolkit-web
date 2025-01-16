@@ -1,21 +1,24 @@
 import { atom } from 'nanostores';
 import { DrawerProps } from '@arco-design/web-react';
 
-export type IDrawerOption<DrawerParam> = Omit<DrawerProps, 'visible'> & {
+export type IDrawerOption = Omit<DrawerProps, 'visible'> & {
+  param?: Record<string, unknown>;
   content: (props: {
-    param?: DrawerParam;
-    onCancel: () => void;
+    param?: Record<string, unknown>;
+    onConfirm: (data: unknown) => void;
+    onClose: () => void;
   }) => JSX.Element;
-  param?: DrawerParam;
+  onConfirm?: (data: unknown) => void;
+  onClose?: () => void;
 };
 
 export const drawerQueueStore = atom<
-  (IDrawerOption<unknown> & {
+  (IDrawerOption & {
     visible: boolean;
   })[]
 >([]);
 
-export function openDrawer<T>(drawerOption: IDrawerOption<T>) {
+export function openDrawer<T>(drawerOption: IDrawerOption) {
   let flag = false;
   let index = 0;
 
@@ -56,5 +59,6 @@ export function openDrawer<T>(drawerOption: IDrawerOption<T>) {
 export function closeDrawer(index: number) {
   const drawerQueue = drawerQueueStore.get();
   drawerQueue[index].visible = false;
+  drawerQueue[index].onClose?.();
   drawerQueueStore.set([...drawerQueue]);
 }

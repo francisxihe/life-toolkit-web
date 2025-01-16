@@ -5,19 +5,9 @@ import CalendarCell from './CalendarCell';
 import { useCalendarContext } from './context';
 import PanelHeader from './CalendarHeader';
 import styles from './style.module.less';
-import TodoEditorDrawer from '../components/TodoEditorDrawer';
-import { useEffect } from 'react';
-import { openDrawer } from '@/layout/Drawer/hooks';
 
 function CalendarPage() {
-  const { pageShowDate, calendarMode, drawerVisible, setDrawerVisible } =
-    useCalendarContext();
-
-  useEffect(() => {
-    openDrawer({
-      content: () => <div>1111</div>,
-    });
-  }, []);
+  const { pageShowDate, calendarMode } = useCalendarContext();
 
   return (
     <div className="bg-bg-2 rounded-lg w-full max-h-full">
