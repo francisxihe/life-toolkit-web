@@ -5,7 +5,8 @@ import { useTodoAllContext } from './context';
 import { useEffect, useState } from 'react';
 import TodoService from '../service/api';
 import { Todo, TodoNode } from '../service/types';
-import TodoEditorDrawer from '../components/TodoEditorDrawer';
+import { openModal } from '@/hooks/OpenModal';
+import TodoDetail from '../components/TodoDetail';
 
 export default function TodoTable() {
   const { todoList, getTodoList } = useTodoAllContext();
@@ -22,9 +23,6 @@ export default function TodoTable() {
     }
     initData();
   }, []);
-
-  const [currentTodo, setCurrentTodo] = useState<Todo | null>(null);
-  const [drawerVisible, setDrawerVisible] = useState(false);
 
   const columns = [
     { title: '待办', dataIndex: 'name', key: 'name' },
@@ -87,8 +85,23 @@ export default function TodoTable() {
           <Button
             type="text"
             onClick={() => {
-              setCurrentTodo(record);
-              setDrawerVisible(true);
+              openModal({
+                title: <div className="text-body-3">编辑</div>,
+                content: (
+                  <div className="ml-[-6px]">
+                    <TodoDetail
+                      todo={record}
+                      onClose={null}
+                      onChange={async () => {
+                        console.log('onChange');
+                      }}
+                    />
+                  </div>
+                ),
+                onCancel: () => {
+                  getTodoList();
+                },
+              });
             }}
           >
             编辑
@@ -158,17 +171,6 @@ export default function TodoTable() {
                   .join(',')}
               </Card>
             ) : null;
-          }
-        }}
-      />
-      <TodoEditorDrawer
-        visible={drawerVisible}
-        todo={currentTodo}
-        onCancel={async () => {
-          setDrawerVisible(false);
-          await getTodoList();
-          if (subTodoLoadingStatus[currentTodo.id] === 'loaded') {
-            onExpandTable(currentTodo, true);
           }
         }}
       />

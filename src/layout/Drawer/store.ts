@@ -18,7 +18,7 @@ export const drawerQueueStore = atom<
   })[]
 >([]);
 
-export function openDrawer<T>(drawerOption: IDrawerOption) {
+export function openDrawer(drawerOption: IDrawerOption) {
   let flag = false;
   let index = 0;
 

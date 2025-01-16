@@ -12,6 +12,7 @@ import { TodoFormData } from '../../types';
 
 export default function AddTodo(props: {
   hiddenDate?: boolean;
+  initialFormData?: Partial<TodoFormData>;
   onChange?: (todoFormData: TodoFormData) => void;
   onSubmit?: (todoFormData: TodoFormData) => Promise<void>;
 }) {
@@ -19,8 +20,11 @@ export default function AddTodo(props: {
     name: '',
     planDate: dayjs().format('YYYY-MM-DD'),
     subTodoList: [],
+    ...props.initialFormData,
   };
-  const [formData, setFormData] = useState<TodoFormData>(defaultFormData);
+  const [formData, setFormData] = useState<TodoFormData>({
+    ...defaultFormData,
+  });
 
   const onSubmit = () => {
     if (!formData.name) {

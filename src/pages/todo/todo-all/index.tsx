@@ -6,8 +6,17 @@ import FlexibleContainer from '@/components/FlexibleContainer';
 import { TodoAllProvider } from './context';
 import TodoTable from './TodoTable';
 import SiteIcon from '@/components/SiteIcon';
+import { openModal } from '@/hooks/OpenModal';
+import AddTodo from '../components/AddTodo';
+import { useRef } from 'react';
+import { TodoFormData } from '../types';
+import TodoService from '../service/api';
+import { useTodoAllContext } from './context';
 
 function TodoAll() {
+  const todoFormDataRef = useRef<TodoFormData | null>(null);
+  const { todoList, getTodoList } = useTodoAllContext();
+
   return (
     <FlexibleContainer className="bg-bg-2 rounded-lg w-full h-full">
       <FlexibleContainer.Fixed className="px-5 py-2 flex justify-between items-center border-b">
@@ -19,7 +28,48 @@ function TodoAll() {
       </FlexibleContainer.Fixed>
 
       <FlexibleContainer.Fixed className="px-5 flex my-3">
-        <Button type="primary">
+        <Button
+          type="primary"
+          onClick={() => {
+            openModal({
+              title: <div className="text-title">添加待办</div>,
+              content: (
+                <AddTodo
+                  onChange={(todoFormData) => {
+                    todoFormDataRef.current = todoFormData;
+                  }}
+                  onSubmit={async (todoFormData) => {
+                    await TodoService.addTodo({
+                      name: todoFormData.name,
+                      importance: todoFormData.importance,
+                      urgency: todoFormData.urgency,
+                      planDate: todoFormData.planDate || undefined,
+                      planStartAt: todoFormData.planTimeRange?.[0] || undefined,
+                      planEndAt: todoFormData.planTimeRange?.[1] || undefined,
+                      recurring: todoFormData.recurring,
+                      tags: todoFormData.tags,
+                    });
+                    getTodoList();
+                  }}
+                />
+              ),
+              onOk: async () => {
+                const todoFormData = todoFormDataRef.current;
+                await TodoService.addTodo({
+                  name: todoFormData.name,
+                  importance: todoFormData.importance,
+                  urgency: todoFormData.urgency,
+                  planDate: todoFormData.planDate || undefined,
+                  planStartAt: todoFormData.planTimeRange?.[0] || undefined,
+                  planEndAt: todoFormData.planTimeRange?.[1] || undefined,
+                  recurring: todoFormData.recurring,
+                  tags: todoFormData.tags,
+                });
+                getTodoList();
+              },
+            });
+          }}
+        >
           <div className="flex items-center gap-2">
             <SiteIcon id="add" width={14} height={14} />
             新建

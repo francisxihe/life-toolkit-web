@@ -1,6 +1,6 @@
 import { Drawer } from '@arco-design/web-react';
 import { useStore } from '@nanostores/react';
-import { drawerQueueStore, closeDrawer } from './hooks';
+import { drawerQueueStore, closeDrawer } from './store';
 
 const GlobalDrawer = () => {
   const drawerQueue = useStore(drawerQueueStore);
