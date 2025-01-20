@@ -5,9 +5,10 @@
   "homepage": "https://francisxihe.github.io/life-toolkit",
   "scripts": {
     "start": "vite",
-    "dev": "vite",
+    "dev": "vite --mode dev",
+    "dev:prod": "vite --mode prod",
     "preview": "vite preview",
-    "build": "vite build",
+    "build": "vite build --mode prod",
     "eslint": "eslint src/ --ext .ts,.tsx,.js,.jsx --fix --cache",
     "stylelint": "stylelint 'src/**/*.less' 'src/**/*.css' --fix --cache",
     "pre-commit": "pretty-quick --staged && npm run eslint && npm run stylelint",

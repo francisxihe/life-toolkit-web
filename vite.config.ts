@@ -7,7 +7,7 @@ import { createHtmlPlugin } from 'vite-plugin-html';
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, __dirname);
-
+  
   return {
     base: `${env.VITE_APP_BASE_PATH}/` || '/',
     resolve: {
@@ -41,6 +41,16 @@ export default defineConfig(({ mode }) => {
       preprocessorOptions: {
         less: {
           javascriptEnabled: true,
+        },
+      },
+    },
+    server: {
+      port: Number(env.VITE_APP_PORT),
+      proxy: {
+        '/api': {
+          target: 'http://localhost:3000',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ''),
         },
       },
     },

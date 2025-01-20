@@ -23,8 +23,6 @@ export interface Todo {
   urgency?: number;
   /** 待办标签 */
   tags: string[];
-  /** 待办开始时间 */
-  startAt?: string;
   /** 待办完成时间 */
   doneAt?: string;
   /** 计划待办日期 */
@@ -55,8 +53,6 @@ export interface SubTodo {
   urgency?: number;
   /** 待办标签 */
   tags: string[];
-  /** 待办开始时间 */
-  startAt?: string;
   /** 待办完成时间 */
   doneAt?: string;
   /** 计划待办开始时间 */

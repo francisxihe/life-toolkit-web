@@ -6,103 +6,105 @@ import {
   SubTodoNode,
   GetTodoListParams,
 } from './types';
+import { get, post } from '@/service/axios';
 
 export default class TodoService {
   static async getTodoList(params: GetTodoListParams = {}): Promise<Todo[]> {
-    let todoList: Todo[] = JSON.parse(
-      localStorage.getItem('todoList') || '[]'
-    ).filter((todo) => !todo.parentId);
+    // let todoList: Todo[] = JSON.parse(
+    //   localStorage.getItem('todoList') || '[]'
+    // ).filter((todo) => !todo.parentId);
 
-    if (params.planDateStart && params.planDateEnd) {
-      todoList = todoList
-        .filter((todo) => todo.planDate)
-        .filter(
-          (todo) =>
-            dayjs(todo.planDate).isAfter(params.planDateStart, 'day') &&
-            dayjs(todo.planDate).isBefore(params.planDateEnd, 'day')
-        );
-    } else if (params.planDateStart) {
-      todoList = todoList
-        .filter((todo) => todo.planDate)
-        .filter((todo) =>
-          dayjs(todo.planDate).isAfter(params.planDateStart, 'day')
-        );
-    } else if (params.planDateEnd) {
-      todoList = todoList
-        .filter((todo) => todo.planDate)
-        .filter((todo) =>
-          dayjs(todo.planDate).isBefore(params.planDateEnd, 'day')
-        );
-    }
+    // if (params.planDateStart && params.planDateEnd) {
+    //   todoList = todoList
+    //     .filter((todo) => todo.planDate)
+    //     .filter(
+    //       (todo) =>
+    //         dayjs(todo.planDate).isAfter(params.planDateStart, 'day') &&
+    //         dayjs(todo.planDate).isBefore(params.planDateEnd, 'day')
+    //     );
+    // } else if (params.planDateStart) {
+    //   todoList = todoList
+    //     .filter((todo) => todo.planDate)
+    //     .filter((todo) =>
+    //       dayjs(todo.planDate).isAfter(params.planDateStart, 'day')
+    //     );
+    // } else if (params.planDateEnd) {
+    //   todoList = todoList
+    //     .filter((todo) => todo.planDate)
+    //     .filter((todo) =>
+    //       dayjs(todo.planDate).isBefore(params.planDateEnd, 'day')
+    //     );
+    // }
 
-    if (params.doneDateStart && params.doneDateEnd) {
-      todoList = todoList
-        .filter((todo) => todo.doneAt)
-        .filter((todo) => {
-          return (
-            dayjs(todo.doneAt).isAfter(params.doneDateStart, 'day') &&
-            dayjs(todo.doneAt).isBefore(params.doneDateEnd, 'day')
-          );
-        });
-    } else if (params.doneDateStart) {
-      todoList = todoList
-        .filter((todo) => todo.doneAt)
-        .filter((todo) =>
-          dayjs(todo.doneAt).isAfter(params.doneDateStart, 'day')
-        );
-    } else if (params.doneDateEnd) {
-      todoList = todoList
-        .filter((todo) => todo.doneAt)
-        .filter((todo) =>
-          dayjs(todo.doneAt).isBefore(params.doneDateEnd, 'day')
-        );
-    }
+    // if (params.doneDateStart && params.doneDateEnd) {
+    //   todoList = todoList
+    //     .filter((todo) => todo.doneAt)
+    //     .filter((todo) => {
+    //       return (
+    //         dayjs(todo.doneAt).isAfter(params.doneDateStart, 'day') &&
+    //         dayjs(todo.doneAt).isBefore(params.doneDateEnd, 'day')
+    //       );
+    //     });
+    // } else if (params.doneDateStart) {
+    //   todoList = todoList
+    //     .filter((todo) => todo.doneAt)
+    //     .filter((todo) =>
+    //       dayjs(todo.doneAt).isAfter(params.doneDateStart, 'day')
+    //     );
+    // } else if (params.doneDateEnd) {
+    //   todoList = todoList
+    //     .filter((todo) => todo.doneAt)
+    //     .filter((todo) =>
+    //       dayjs(todo.doneAt).isBefore(params.doneDateEnd, 'day')
+    //     );
+    // }
 
-    if (params.abandonedDateStart && params.abandonedDateEnd) {
-      todoList = todoList
-        .filter((todo) => todo.abandonedAt)
-        .filter(
-          (todo) =>
-            dayjs(todo.abandonedAt).isAfter(params.abandonedDateStart, 'day') &&
-            dayjs(todo.abandonedAt).isBefore(params.abandonedDateEnd, 'day')
-        );
-    } else if (params.abandonedDateStart) {
-      todoList = todoList
-        .filter((todo) => todo.abandonedAt)
-        .filter((todo) =>
-          dayjs(todo.abandonedAt).isAfter(params.abandonedDateStart, 'day')
-        );
-    } else if (params.abandonedDateEnd) {
-      todoList = todoList
-        .filter((todo) => todo.abandonedAt)
-        .filter((todo) =>
-          dayjs(todo.abandonedAt).isBefore(params.abandonedDateEnd, 'day')
-        );
-    }
+    // if (params.abandonedDateStart && params.abandonedDateEnd) {
+    //   todoList = todoList
+    //     .filter((todo) => todo.abandonedAt)
+    //     .filter(
+    //       (todo) =>
+    //         dayjs(todo.abandonedAt).isAfter(params.abandonedDateStart, 'day') &&
+    //         dayjs(todo.abandonedAt).isBefore(params.abandonedDateEnd, 'day')
+    //     );
+    // } else if (params.abandonedDateStart) {
+    //   todoList = todoList
+    //     .filter((todo) => todo.abandonedAt)
+    //     .filter((todo) =>
+    //       dayjs(todo.abandonedAt).isAfter(params.abandonedDateStart, 'day')
+    //     );
+    // } else if (params.abandonedDateEnd) {
+    //   todoList = todoList
+    //     .filter((todo) => todo.abandonedAt)
+    //     .filter((todo) =>
+    //       dayjs(todo.abandonedAt).isBefore(params.abandonedDateEnd, 'day')
+    //     );
+    // }
 
-    if (params.keyword) {
-      todoList = todoList.filter(
-        (todo) =>
-          todo.name.includes(params.keyword) ||
-          todo.description?.includes(params.keyword)
-      );
-    }
+    // if (params.keyword) {
+    //   todoList = todoList.filter(
+    //     (todo) =>
+    //       todo.name.includes(params.keyword) ||
+    //       todo.description?.includes(params.keyword)
+    //   );
+    // }
 
-    if (params.status) {
-      todoList = todoList.filter((todo) => todo.status === params.status);
-    }
+    // if (params.status) {
+    //   todoList = todoList.filter((todo) => todo.status === params.status);
+    // }
 
-    if (params.importance) {
-      todoList = todoList.filter(
-        (todo) => todo.importance === params.importance
-      );
-    }
+    // if (params.importance) {
+    //   todoList = todoList.filter(
+    //     (todo) => todo.importance === params.importance
+    //   );
+    // }
 
-    if (params.urgency) {
-      todoList = todoList.filter((todo) => todo.urgency === params.urgency);
-    }
+    // if (params.urgency) {
+    //   todoList = todoList.filter((todo) => todo.urgency === params.urgency);
+    // }
 
-    return todoList;
+    const res = await get('/todo/list', {});
+    return res;
   }
 
   static async getTodoTree() {
@@ -190,15 +192,17 @@ export default class TodoService {
   }
 
   static async addTodo(todo: Omit<Todo, 'id' | 'status' | 'createdAt'>) {
-    const todoList = await this.getTodoList();
-    const newTodo = {
-      id: Math.random().toString(36).substring(7),
-      status: 'todo',
-      createdAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-      ...todo,
-    };
-    localStorage.setItem('todoList', JSON.stringify([...todoList, newTodo]));
-    return newTodo;
+    // const todoList = await this.getTodoList();
+    // const newTodo = {
+    //   id: Math.random().toString(36).substring(7),
+    //   status: 'todo',
+    //   createdAt: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+    //   ...todo,
+    // };
+    // localStorage.setItem('todoList', JSON.stringify([...todoList, newTodo]));
+    // return newTodo;
+    const res = await post('/todo/create', {}, todo);
+    return res;
   }
 
   static async addSubTodo(
